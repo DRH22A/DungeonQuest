@@ -32,6 +32,8 @@ def show_title_screen():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 # Check if the mouse click is within the "Start" button area
                 if start_button_rect.collidepoint(event.pos):
+                    # Use subprocess to run the foundation.py script
+                    subprocess.run(["python", "foundation.py"])
 
         # Draw the game elements
         screen.blit(background_image, (0, 0))
