@@ -1,6 +1,5 @@
 # DungeonQuest.py
 import title
-import foundation
 
 if __name__ == "__main__":
     title.show_title_screen()
