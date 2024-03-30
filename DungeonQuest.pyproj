@@ -21,12 +21,26 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="app.py" />
     <Compile Include="DungeonQuest.py" />
     <Compile Include="foundation.py" />
+    <Compile Include="login.py" />
+    <Compile Include="main_server.py" />
+    <Compile Include="secondary_server.py" />
+    <Compile Include="sign_up.py" />
+    <Compile Include="models.py" />
+    <Compile Include="sign_in.py" />
     <Compile Include="title.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Images\" />
+    <Folder Include="Templates\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="installs.txt" />
+    <Content Include="Templates\confirmation_of_sign_up.html" />
+    <Content Include="Templates\sign_in.html" />
+    <Content Include="Templates\sign_up.html" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
