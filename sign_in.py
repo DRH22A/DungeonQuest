@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect
 from flask_bcrypt import Bcrypt
 from models import db, User
 import webbrowser
+import foundation
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'  # SQLite database
@@ -22,6 +23,11 @@ def sign_in():
                 # You need to know the URL where foundation.py is running
                 # If it's running locally, it could be something like http://localhost:8000/
                 # If you're unsure, check the configuration in foundation.py where the Flask app is being run (app.run())
+                try:
+                    foundation.MainGame([username, password])
+                except:
+                    print('DungeonQuest failed to launch!')
+
                 return redirect('http://localhost:8000/')  # Adjust the URL as needed
             else:
                 # Invalid username or password
