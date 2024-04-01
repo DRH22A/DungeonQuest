@@ -1,9 +1,11 @@
-pip install flask
-pip install flask_sqlalchemy
-pip install flask_login
-pip install cryptography
-pip install pygame
-pip install pyzmq
-pip install flask_wtf
-pip install wtforms
-pip install flask_bcrypt
+flask
+flask_sqlalchemy
+flask_login
+cryptography
+pygame
+pyzmq
+flask_wtf
+wtforms
+flask_bcrypt
+pyautogui
+pygetwindow
