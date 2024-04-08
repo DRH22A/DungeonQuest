@@ -4,6 +4,9 @@ from models import db, User
 import webbrowser
 import foundation
 
+import config
+import pygame
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'  # SQLite database
 db.init_app(app)
@@ -23,10 +26,10 @@ def sign_in():
                 # You need to know the URL where foundation.py is running
                 # If it's running locally, it could be something like http://127.0.0.1:8000/
                 # If you're unsure, check the configuration in foundation.py where the Flask app is being run (app.run())
-                try:
-                    foundation.MainGame([username, password])
-                except:
-                    print('DungeonQuest failed to launch!')
+                config.local_username = username
+                config.local_password = password
+
+                config.current_menu = config.SCREEN_GAME
 
                 return redirect('http://127.0.0.1:8000/')  # Adjust the URL as needed
             else:
