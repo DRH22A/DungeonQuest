@@ -94,7 +94,7 @@ if __name__ == '__main__':
         db.create_all()
         
         # Open the sign-up page in the default web browser
-        webbrowser.open_new("http://localhost:5000/sign_up")
+        webbrowser.open_new("http://127.0.0.1:8000/sign_up")
         
         # Run the Flask app
-        app.run(debug=True)
+        app.run(host="127.0.0.1", port=8000)

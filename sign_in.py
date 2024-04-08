@@ -21,14 +21,14 @@ def sign_in():
                 # User exists and password is correct
                 # Redirect to foundation.py
                 # You need to know the URL where foundation.py is running
-                # If it's running locally, it could be something like http://localhost:8000/
+                # If it's running locally, it could be something like http://127.0.0.1:8000/
                 # If you're unsure, check the configuration in foundation.py where the Flask app is being run (app.run())
                 try:
                     foundation.MainGame([username, password])
                 except:
                     print('DungeonQuest failed to launch!')
 
-                return redirect('http://localhost:8000/')  # Adjust the URL as needed
+                return redirect('http://127.0.0.1:8000/')  # Adjust the URL as needed
             else:
                 # Invalid username or password
                 return render_template('sign_in.html', error='Invalid username or password')
@@ -41,7 +41,7 @@ def sign_in():
 
 if __name__ == '__main__':
     # Open the sign-in page in the default web browser before starting the Flask server
-    webbrowser.open_new("http://localhost:5000/sign_in")
+    webbrowser.open_new("http://127.0.0.1:8000/sign_in")
     
     # Start the Flask server
-    app.run(debug=True)
+    app.run(host="127.0.0.1", port=8000)

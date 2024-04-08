@@ -3,7 +3,7 @@ import zmq
 # Initialize ZeroMQ context and socket for communication with secondary server
 context = zmq.Context()
 socket = context.socket(zmq.REQ)
-socket.connect("tcp://localhost:5555")
+socket.connect("tcp://127.0.0.1:5555")
 
 def send_message_to_secondary_server(message):
     socket.send_json(message)
