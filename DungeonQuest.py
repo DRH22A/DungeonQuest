@@ -18,6 +18,6 @@ if __name__ == "__main__":
             config.current_menu = login.show_login_screen(screen)
             print("Login Screen")
         elif config.current_menu == config.SCREEN_GAME:
-            foundation.show_game_screen()
+            foundation.show_game_screen(screen)
             print("Game Screen")
 
