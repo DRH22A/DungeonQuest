@@ -4,21 +4,23 @@ import sqlite3
 import bcrypt
 import os
 
+from colorama import Fore, Back, Style
+
 import config
 
 class InputBox:
 
     def __init__(self, x, y, w, h, text=''):
         self.rect = pygame.Rect(x, y, w, h)
-        self.color = pygame.Color('dodgerblue2')
+        self.color = pygame.Color('white')
         self.text = text
-        self.font = pygame.font.Font(None, 32)
+        self.font = pygame.font.Font("resources/PixelOperator8.ttf", 16)
         self.txt_surface = self.font.render(text, True, self.color)
         self.active = False
         self.cursor_visible = True 
         self.cursor_counter = 0
-        self.color_active = pygame.Color('dodgerblue4')
-        self.color_passive = pygame.Color('dodgerblue2')
+        self.color_active = pygame.Color('gray')
+        self.color_passive = pygame.Color('white')
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -31,20 +33,18 @@ class InputBox:
             if self.active:
                 if event.key == pygame.K_BACKSPACE:
                     self.text = self.text[:-1]
-                else:
+                elif len(self.text) < 12:
                     self.text += event.unicode
-                # Re-render the text.
                 self.txt_surface = self.font.render(self.text, True, self.color)
 
     def update(self):
         self.cursor_counter += 1
-        if self.cursor_counter % 30 == 0:   
+        if self.cursor_counter % 500 == 0:   
             self.cursor_visible = not self.cursor_visible 
         if not self.active:
             self.cursor_visible = False 
 
     def draw(self, screen):
-        # Blit the text.
         screen.blit(self.txt_surface, (self.rect.x+5, self.rect.y+5))
         if self.cursor_visible:
             pygame.draw.line(screen, self.color, (self.txt_surface.get_width()+5+self.rect.x, self.rect.y+5), 
@@ -53,7 +53,7 @@ class InputBox:
 
 
 def draw_text(screen, text: str, pos: tuple):
-    font = pygame.font.Font(None, 32)
+    font = pygame.font.Font("resources/PixelOperator8.ttf", 16)
     txt_surface = font.render(text, True, pygame.Color('white'))
     screen.blit(txt_surface, pos)
     
@@ -63,17 +63,17 @@ def show_login_screen(screen):
 
     pygame.display.set_caption("DungeonQuest Login Screen")
 
-    input_box_username = InputBox(width // 2, height // 2 - 160, 200, 32)
-    input_box_password = InputBox(width // 2, height // 2 - 100, 200, 32)
+    input_box_username = InputBox(width // 2 - 100, height // 2 - 160, 200, 32)
+    input_box_password = InputBox(width // 2 - 100, height // 2 - 100, 200, 32)
     input_boxes = [input_box_username, input_box_password]
-    is_admin_rect = pygame.Rect(width // 2, height // 2 - 40, 20, 20)
+    is_admin_rect = pygame.Rect(width // 2 - 100, height // 2 - 40, 20, 20)
     is_admin = False
 
-    sign_up_button = pygame.font.Font(None, 36).render("Sign Up", True, (255, 255, 255))
-    sign_up_rect = sign_up_button.get_rect(center=(width // 2, height // 2))
+    sign_up_button = pygame.font.Font("resources/PixelOperator8.ttf", 16).render("Sign Up", True, (255, 255, 255))
+    sign_up_rect = sign_up_button.get_rect(center=(width // 2, height // 2 + 30))
 
-    sign_in_button = pygame.font.Font(None, 36).render("Sign In", True, (255, 255, 255))
-    sign_in_rect = sign_in_button.get_rect(center=(width // 2, height // 2 + 50))
+    sign_in_button = pygame.font.Font("resources/PixelOperator8.ttf", 16).render("Sign In", True, (255, 255, 255))
+    sign_in_rect = sign_in_button.get_rect(center=(width // 2, height // 2 + 80))
 
     while True:
         for event in pygame.event.get():
@@ -108,22 +108,25 @@ def show_login_screen(screen):
                         try:
                             c.execute("""INSERT INTO users (username, password, role) VALUES (?, ?, ?)""",
                                       (username, hashed_password, 'Admin' if is_admin else 'Player'))
-                            print("Sign Up Successful")
+                            print(Fore.GREEN + "Sign Up Successful")
+                            if is_admin:
+                                print(Fore.BLUE + "You have been signed up as an admin!")
+                            print(Fore.GREEN + "You may now sign in to the game!" + Style.RESET_ALL)
                         except sqlite3.IntegrityError:
-                            print("Username already taken")
+                            print(Fore.RED + "Username already taken!" + Style.RESET_ALL)
 
                     if sign_in_rect.collidepoint(event.pos):
                         c.execute("""SELECT * FROM users WHERE username = ?""", (username,))
                         user = c.fetchone()
 
                         if user and bcrypt.checkpw(password.encode('utf-8'), user[2]):
-                            print("Sign In Successful")
+                            print(Fore.GREEN + "Sign In Successful" + Style.RESET_ALL)
                             config.local_username = username
                             config.local_password = user[2]
 
                             return config.SCREEN_GAME
                         else:
-                            print("Invalid username or password")
+                            print(Fore.RED + "Invalid username or password" + Style.RESET_ALL)
 
                     conn.commit()
                     conn.close()
@@ -140,7 +143,7 @@ def show_login_screen(screen):
         if is_admin:
             pygame.draw.rect(screen, (0, 255, 0), is_admin_rect.inflate(-5, -5)) 
 
-        draw_text(screen, "Admin", (width // 2 + 40, height // 2 - 50))
+        draw_text(screen, "Sign up as admin!", (width // 2 - 70, height // 2 - 38))
         
         screen.blit(sign_up_button, sign_up_rect.topleft)
         screen.blit(sign_in_button, sign_in_rect.topleft)
