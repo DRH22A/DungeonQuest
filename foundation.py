@@ -34,33 +34,20 @@ def show_game_screen(screen):
 
     config.TILE_SET = tiles
 
-    dungeon_grid = [
-        ['W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'],
-        ['W', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', 'W'],
-        ['W', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', 'W'],
-        ['W', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', 'W'],
-        ['W', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', 'W'],
-        ['W', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', 'W'],
-        ['W', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', 'O'],
-        ['W', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', 'O'],
-        ['W', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', 'O'],
-        ['W', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', 'W'],
-        ['W', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', 'W'],
-        ['W', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', 'W'],
-        ['W', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', 'W'],
-        ['W', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', 'W'],
-        ['W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'],
-    ]
+    dungeon_grid = config.SPAWN_MAP
  
     player_name = pygame.font.Font("resources/PixelOperator8.ttf", 16).render(config.local_username, True, (255, 255, 255))
 
-    print(Fore.BLUE + "Welcome to the gamebox!\n\t" +
-          Fore.YELLOW + "Move using the screen, and act in the terminal.\n\t" +
+    print(Fore.BLUE + "Welcome to the gamebox!\n" +
+          Fore.YELLOW + "Move using the screen, and act in the terminal.\n" +
           "Type 'exit' to leave the game.\n" + Style.RESET_ALL)
     print("> ", end="")
+    # TODO: Chatbox
 
     # Game loop
     colliders = []
+    entities = []
+
     running = True
     while running:
         for event in pygame.event.get():
@@ -97,7 +84,22 @@ def show_game_screen(screen):
 
         screen.fill((0, 0, 0))
 
-        screen, colliders = build_dungeon(screen, dungeon_grid)
+        screen, colliders, entities = build_dungeon(screen, dungeon_grid)
+
+        #
+        # MAIN GAME LOGIC START
+        #
+
+        # TODO: Figure out why this is not working
+        #for e in entities:
+        #    # TODO: Handle exit logic
+        #    if player_rect.colliderect(e[1]) and e[0] == 'O':
+        #        print(Fore.GREEN + "You found an exit!" + Style.RESET_ALL)
+            
+        #
+        # MAIN GAME LOGIC END
+        #
+
     
         screen.blit(tiles[config.CHARACTER_TILE], (player_x, player_y))
         screen.blit(player_name, (player_x, player_y - 15))
