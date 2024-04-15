@@ -25,5 +25,8 @@ computing principles.
 ### Parallel: 
 - [ ] Dungeon Procedural Generation
 
-### Distributed:
+### Distributed (see potential distributed solutions in sublist):
 - [ ] Client/Server connections
+   - Chatbox
+   - Social spawn room
+   - Serverside database instead of local sqlite
