@@ -18,7 +18,7 @@ def build_dungeon(screen: pygame.display, dungeon_grid: list[list[chr]]) -> list
     G -> Decorative grass
     The dungeon_grid should be the size of the screen grid.
     """
-    TILE_SIZE = 60
+    TILE_SIZE = config.VISUAL_TILE_SIZE
 
     tile_wall = config.TILE_SET[config.WALL_TILE]
     tile_enemy = config.TILE_SET[config.DRAGON_TILE]
