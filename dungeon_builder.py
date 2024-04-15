@@ -13,7 +13,6 @@ def build_dungeon(screen: pygame.display, dungeon_grid: list[list[chr]]) -> list
     dungeon_grid takes in a 2D list of characters representing the dungeon. The dungeon is built by iterating through the list.
     . -> Empty space
     W -> Wall
-    X -> Enemy
     O -> Exit
     G -> Decorative grass
     The dungeon_grid should be the size of the screen grid.
@@ -21,14 +20,10 @@ def build_dungeon(screen: pygame.display, dungeon_grid: list[list[chr]]) -> list
     TILE_SIZE = config.VISUAL_TILE_SIZE
 
     tile_wall = config.TILE_SET[config.WALL_TILE]
-    tile_enemy = config.TILE_SET[config.DRAGON_TILE]
     tile_grass = config.TILE_SET[config.GRASS_TILE]
     tile_exit = config.TILE_SET[config.EXIT_TILE]
 
     colliders = []
-
-    entities = []
-    ent_colliders = []
 
     exits = []
     exit_colliders = []
@@ -40,11 +35,6 @@ def build_dungeon(screen: pygame.display, dungeon_grid: list[list[chr]]) -> list
             if dungeon_grid[row][col] == 'W':
                 screen.blit(tile_wall, (col * TILE_SIZE, row * TILE_SIZE))
                 colliders.append(pygame.Rect(x, y, TILE_SIZE, TILE_SIZE))
-            elif dungeon_grid[row][col] == 'X':
-                screen.blit(tile_enemy, (col * TILE_SIZE, row * TILE_SIZE))
-                # TODO: Create enemy and collidebox
-                # Remember, this should be networked separate from the dungeon map!
-                # Should probably even move this to a separate function
             elif dungeon_grid[row][col] in ['U', 'L', 'D', 'R']:
                 screen.blit(tile_exit, (col * TILE_SIZE, row * TILE_SIZE))
                 exits.append(dungeon_grid[row][col])
@@ -53,4 +43,4 @@ def build_dungeon(screen: pygame.display, dungeon_grid: list[list[chr]]) -> list
                 screen.blit(tile_grass, (col * TILE_SIZE, row * TILE_SIZE))
 
     
-    return [screen, colliders, [entities, ent_colliders], [exits, exit_colliders]]
+    return [screen, colliders, [exits, exit_colliders]]

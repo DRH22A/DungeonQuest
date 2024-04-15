@@ -42,7 +42,7 @@ def show_game_screen(screen):
     player_name = pygame.font.Font("resources/PixelOperator8.ttf", 16).render(config.local_username, True, (255, 255, 255))
 
     # Game loop
-    colliders, exits, entities = [], [], []
+    colliders, exits = [], []
     
     exit_counter = 0
 
@@ -76,7 +76,7 @@ def show_game_screen(screen):
 
         screen.fill((0, 0, 0))
 
-        screen, colliders, entities, exits = build_dungeon(screen, dungeon_grid)
+        screen, colliders, exits = build_dungeon(screen, dungeon_grid)
 
         #
         # MAIN GAME LOGIC START
@@ -102,10 +102,10 @@ def show_game_screen(screen):
                 exit_counter += 1
 
         if exit_counter >= 10:
-            screen, colliders, entities, exits = build_dungeon(screen, config.VICTORY_MAP)
+            screen, colliders, exits = build_dungeon(screen, config.VICTORY_MAP)
 
             winner_text = pygame.font.Font("resources/PixelOperator8.ttf", 16).render("YOU ARE A WINNER!", True, (255, 215, 0))
-            delete_text = pygame.font.Font("resources/PixelOperator8.ttf", 11).render("Type \"DELETE\" in the terminal to delete your account and play again!", True, (255, 255, 255))
+            delete_text = pygame.font.Font("resources/PixelOperator8.ttf", 11).render("Exit the game to delete your account and play again!", True, (255, 255, 255))
             screen.blit(winner_text, ((width / 2) - (winner_text.get_width() / 2), height / 2 - 50))
             screen.blit(delete_text, ((width / 2) - (delete_text.get_width() / 2), (height / 2) - (delete_text.get_height()) - 10))
 
