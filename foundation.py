@@ -1,27 +1,29 @@
 # main.py
 import pygame
 from pygame.locals import *
+import threading
 
 from colorama import Fore, Back, Style
 
 import config
 from dungeon_builder import build_dungeon
 from dungeon_generator import generate_dungeon
+from textbox import InputBox
 
 def show_game_screen(screen):
     width, height = config.WIDTH, config.HEIGHT
     pygame.display.set_caption("Dungeon Quest")
     pygame.key.set_repeat(1, 1)
 
-    player_size = 50
-    collision_size = 32
+    player_size = config.VISUAL_TILE_SIZE
+    collision_size = player_size
 
-    player_x = round((width // 2) / 60) * 60
-    player_y = round((height // 2) / 60) * 60
+    player_x = round((width // 2) / player_size) * player_size
+    player_y = round((height // 2) / player_size) * player_size
 
-    player_speed = 2.5 * player_size/2
+    player_speed = player_size
     key_pressed = False
-    player_rect = pygame.Rect(player_x - 15, player_y - 20, collision_size, collision_size) 
+    player_rect = pygame.Rect(player_x, player_y, collision_size, collision_size) 
 
     # Load tileset
     tileset = pygame.image.load("resources/tileset.png")
@@ -30,7 +32,7 @@ def show_game_screen(screen):
     for y in range(0, tileset.get_height(), tile_size):
         for x in range(0, tileset.get_width(), tile_size):
             tile = tileset.subsurface(x, y, tile_size, tile_size)
-            tile = pygame.transform.scale(tile, (player_size * 1.1, player_size * 1.1))
+            tile = pygame.transform.scale(tile, (player_size, player_size))
             tiles.append(tile)
 
     config.TILE_SET = tiles
@@ -39,20 +41,15 @@ def show_game_screen(screen):
  
     player_name = pygame.font.Font("resources/PixelOperator8.ttf", 16).render(config.local_username, True, (255, 255, 255))
 
-    print(Fore.BLUE + "Welcome to the gamebox!\n" +
-          Fore.YELLOW + "Move using the screen, and act in the terminal.\n" +
-          "Type 'exit' to leave the game.\n" + Style.RESET_ALL)
-    print("> ", end="")
-    # TODO: Chatbox
-
     # Game loop
     colliders, exits, entities = [], [], []
+    
+    exit_counter = 0
 
-    running = True
-    while running:
+    while config.running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                config.running = False
 
             if event.type == pygame.KEYUP:
                 key_pressed = False
@@ -63,20 +60,15 @@ def show_game_screen(screen):
             if event.type == pygame.KEYDOWN and not key_pressed:
                 if keys[pygame.K_LEFT] and player_rect.x > 0:
                     player_rect.move_ip(-player_speed, 0)
-                    if any(player_rect.colliderect(c) for c in colliders):
-                        player_rect.topleft = old_position
                 if keys[pygame.K_RIGHT] and player_rect.x < width - player_size:
                     player_rect.move_ip(player_speed, 0)
-                    if any(player_rect.colliderect(c) for c in colliders):
-                        player_rect.topleft = old_position
                 if keys[pygame.K_UP] and player_rect.y > 0:
                     player_rect.move_ip(0, -player_speed)
-                    if any(player_rect.colliderect(c) for c in colliders):
-                        player_rect.topleft = old_position
                 if keys[pygame.K_DOWN] and player_rect.y < height - player_size:
                     player_rect.move_ip(0, player_speed)
-                    if any(player_rect.colliderect(c) for c in colliders):
-                        player_rect.topleft = old_position
+ 
+                if any(player_rect.colliderect(c) for c in colliders):
+                    player_rect.topleft = old_position
 
                 key_pressed = True
 
@@ -91,19 +83,42 @@ def show_game_screen(screen):
         #
 
         for i, _ in enumerate(exits[0]):
-            # TODO: Handle exit logic
             if player_rect.colliderect(exits[1][i]):
                 screen, colliders, entities, exits = build_dungeon(screen, generate_dungeon(exits[0][i]))
+                if exits[0][i] == 'R':
+                    player_x = round((width // 10) / player_size) * player_size
+                    player_y = round((height // 2) / player_size) * player_size
+                elif exits[0][i] == 'L':
+                    player_x = round((width - (width // 10)) / player_size) * player_size
+                    player_y = round((height // 2) / player_size) * player_size
+                elif exits[0][i] == 'U':
+                    player_x = round((width // 2) / player_size) * player_size
+                    player_y = round((height - (height // 10) + 10) / player_size) * player_size
+                else:
+                    player_x = round((width // 2) / player_size) * player_size
+                    player_y = round((height // 10) / player_size) * player_size
+
+                player_rect = pygame.Rect(player_x, player_y, collision_size, collision_size) 
+                exit_counter += 1
+
+        if exit_counter >= 10:
+            screen, colliders, entities, exits = build_dungeon(screen, config.VICTORY_MAP)
+
+            winner_text = pygame.font.Font("resources/PixelOperator8.ttf", 16).render("YOU ARE A WINNER!", True, (255, 215, 0))
+            delete_text = pygame.font.Font("resources/PixelOperator8.ttf", 11).render("Type \"DELETE\" in the terminal to delete your account and play again!", True, (255, 255, 255))
+            screen.blit(winner_text, ((width / 2) - (winner_text.get_width() / 2), height / 2 - 50))
+            screen.blit(delete_text, ((width / 2) - (delete_text.get_width() / 2), (height / 2) - (delete_text.get_height()) - 10))
 
             
         #
         # MAIN GAME LOGIC END
         #
 
-    
+        
         screen.blit(tiles[config.CHARACTER_TILE], (player_x, player_y))
         screen.blit(player_name, (player_x, player_y - 15))
 
         pygame.display.flip()
 
+    print(Fore.BLUE + "Goodbye!" + Style.RESET_ALL)
     pygame.quit()

@@ -1,5 +1,7 @@
 # DungeonQuest.py
-import pygame
+import contextlib
+with contextlib.redirect_stdout(None):
+    import pygame
 
 import title
 import login
@@ -13,7 +15,7 @@ if __name__ == "__main__":
     
     screen = pygame.display.set_mode((config.WIDTH, config.HEIGHT))
 
-    print(Fore.BLACK + Back.GREEN + "Please log in to use the chatbox." + Style.RESET_ALL)
+    print(Fore.BLACK + Back.GREEN + "Welcome to DUNGEON QUEST!" + Style.RESET_ALL)
 
     while True:
         if config.current_menu == config.SCREEN_MAIN_MENU:
