@@ -1,4 +1,9 @@
 # DungeonQuest
+## Usage
+```
+pip install -r requirements.txt
+python3 ./main.py
+```
 
 ## Requirements:
 The course project should involve interaction with a database and apply the principles of information management, role-based access, secure computing principles, and either parallel or distributed
@@ -18,8 +23,8 @@ computing principles.
 - [ ] Message queries
 
 ### Secure Computing Principles:
-- [ ] Create account
-- [ ] Login/Auth
+- [X] Create account
+- [X] Login/Auth
 - [ ] Delete account
 
 ### Parallel: 
