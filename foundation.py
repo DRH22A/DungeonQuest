@@ -5,7 +5,8 @@ from pygame.locals import *
 from colorama import Fore, Back, Style
 
 import config
-from dungeon_builder_helper import build_dungeon
+from dungeon_builder import build_dungeon
+from dungeon_generator import generate_dungeon
 
 def show_game_screen(screen):
     width, height = config.WIDTH, config.HEIGHT
@@ -92,7 +93,8 @@ def show_game_screen(screen):
         for i, _ in enumerate(exits[0]):
             # TODO: Handle exit logic
             if player_rect.colliderect(exits[1][i]):
-                print(Fore.GREEN + "You found an exit: " + exits[0][i] + Style.RESET_ALL)
+                screen, colliders, entities, exits = build_dungeon(screen, generate_dungeon(exits[0][i]))
+
             
         #
         # MAIN GAME LOGIC END
