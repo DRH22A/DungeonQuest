@@ -1,6 +1,7 @@
 import pygame
 import sys
 import sqlite3
+import mysql.connector
 import bcrypt
 import os
 
@@ -92,21 +93,26 @@ def show_login_screen(screen):
                     if not os.path.exists('instance'):
                         os.makedirs('instance')
 
-                    conn = sqlite3.connect(os.path.join('instance', 'site.db'))
-                    c = conn.cursor()
+                    connection = mysql.connector.connect(
+                        host="cop4521-dungeonquest.c3gw2k8i8nc0.us-east-1.rds.amazonaws.com",
+                        user="cop4521",
+                        password="COP4521!",
+                        database="dungeonquest"
+                    )
+                    cursor = connection.cursor(dictionary=True)
 
                     # create users table if it doesn't exist
-                    c.execute("""CREATE TABLE IF NOT EXISTS users(
-                                    id INTEGER PRIMARY KEY,
-                                    username TEXT NOT NULL UNIQUE,
-                                    password TEXT NOT NULL,
-                                    role TEXT NOT NULL)""")
+                    cursor.execute("""CREATE TABLE IF NOT EXISTS users(
+                                    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+                                    username VARCHAR(255) NOT NULL UNIQUE,
+                                    password VARCHAR(255) NOT NULL,
+                                    role VARCHAR(10) NOT NULL)""")
 
                     if sign_up_rect.collidepoint(event.pos):
                         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
                         try:
-                            c.execute("""INSERT INTO users (username, password, role) VALUES (?, ?, ?)""",
+                            cursor.execute("""INSERT INTO users (username, password, role) VALUES (%s, %s, %s)""",
                                       (username, hashed_password, 'Admin' if is_admin else 'Player'))
                             print(Fore.GREEN + "Sign Up Successful")
                             if is_admin:
@@ -116,20 +122,20 @@ def show_login_screen(screen):
                             print(Fore.RED + "Username already taken!" + Style.RESET_ALL)
 
                     if sign_in_rect.collidepoint(event.pos):
-                        c.execute("""SELECT * FROM users WHERE username = ?""", (username,))
-                        user = c.fetchone()
+                        cursor.execute("""SELECT username, password FROM users WHERE username = %s""", (username,))
+                        user = cursor.fetchone()
 
-                        if user and bcrypt.checkpw(password.encode('utf-8'), user[2]):
+                        if user and bcrypt.checkpw(password.encode('utf-8'), user.get('password').encode('utf-8')):
                             print(Fore.GREEN + "Sign In Successful" + Style.RESET_ALL)
                             config.local_username = username
-                            config.local_password = user[2]
+                            config.local_password = user.get('password')
 
                             return config.SCREEN_GAME
                         else:
                             print(Fore.RED + "Invalid username or password" + Style.RESET_ALL)
 
-                    conn.commit()
-                    conn.close()
+                    connection.commit()
+                    connection.close()
 
             for box in input_boxes:
                 box.handle_event(event)
