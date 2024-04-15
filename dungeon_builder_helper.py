@@ -26,8 +26,13 @@ def build_dungeon(screen: pygame.display, dungeon_grid: list[list[chr]]) -> list
     tile_exit = config.TILE_SET[config.EXIT_TILE]
 
     colliders = []
+
     entities = []
     ent_colliders = []
+
+    exits = []
+    exit_colliders = []
+
     for row in range(len(dungeon_grid)):
         for col in range(len(dungeon_grid[row])):
             x, y = col * TILE_SIZE, row * TILE_SIZE
@@ -40,13 +45,12 @@ def build_dungeon(screen: pygame.display, dungeon_grid: list[list[chr]]) -> list
                 # TODO: Create enemy and collidebox
                 # Remember, this should be networked separate from the dungeon map!
                 # Should probably even move this to a separate function
-            elif dungeon_grid[row][col] == 'O':
-                # TODO: Allow N, W, S, E exits
+            elif dungeon_grid[row][col] in ['U', 'L', 'D', 'R']:
                 screen.blit(tile_exit, (col * TILE_SIZE, row * TILE_SIZE))
-                entities.append('O')
-                ent_colliders.append(pygame.Rect(x, y, TILE_SIZE, TILE_SIZE))
+                exits.append(dungeon_grid[row][col])
+                exit_colliders.append(pygame.Rect(x, y, TILE_SIZE, TILE_SIZE))
             elif dungeon_grid[row][col] == 'G':
                 screen.blit(tile_grass, (col * TILE_SIZE, row * TILE_SIZE))
 
     
-    return [screen, colliders, [entities, ent_colliders]]
+    return [screen, colliders, [entities, ent_colliders], [exits, exit_colliders]]

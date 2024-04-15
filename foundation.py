@@ -45,8 +45,7 @@ def show_game_screen(screen):
     # TODO: Chatbox
 
     # Game loop
-    colliders = []
-    entities = []
+    colliders, exits, entities = [], [], []
 
     running = True
     while running:
@@ -84,17 +83,16 @@ def show_game_screen(screen):
 
         screen.fill((0, 0, 0))
 
-        screen, colliders, entities = build_dungeon(screen, dungeon_grid)
+        screen, colliders, entities, exits = build_dungeon(screen, dungeon_grid)
 
         #
         # MAIN GAME LOGIC START
         #
 
-        # TODO: Figure out why this is not working
-        #for e in entities:
-        #    # TODO: Handle exit logic
-        #    if player_rect.colliderect(e[1]) and e[0] == 'O':
-        #        print(Fore.GREEN + "You found an exit!" + Style.RESET_ALL)
+        for i, _ in enumerate(exits[0]):
+            # TODO: Handle exit logic
+            if player_rect.colliderect(exits[1][i]):
+                print(Fore.GREEN + "You found an exit: " + exits[0][i] + Style.RESET_ALL)
             
         #
         # MAIN GAME LOGIC END
