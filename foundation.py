@@ -92,7 +92,7 @@ def show_game_screen(screen):
                     player_y = round((height // 2) / player_size) * player_size
                 elif exits[0][i] == 'U':
                     player_x = round((width // 2) / player_size) * player_size
-                    player_y = round((height - (height // 10) + 10) / player_size) * player_size
+                    player_y = round((height - (height // 9)) / player_size) * player_size
                 else:
                     player_x = round((width // 2) / player_size) * player_size
                     player_y = round((height // 10) / player_size) * player_size
