@@ -83,7 +83,7 @@ def show_game_screen(screen):
 
         for i, _ in enumerate(exits[0]):
             if player_rect.colliderect(exits[1][i]):
-                screen, colliders, entities, exits = build_dungeon(screen, generate_dungeon(exits[0][i]))
+                screen, colliders, exits = build_dungeon(screen, generate_dungeon(exits[0][i]))
                 if exits[0][i] == 'R':
                     player_x = round((width // 10) / player_size) * player_size
                     player_y = round((height // 2) / player_size) * player_size
