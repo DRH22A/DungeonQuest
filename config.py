@@ -6,6 +6,9 @@ running = True
 local_username = None
 local_password = None
 
+# TODO: network this to sql db
+current_level = 0
+
 # Global constants
 SCREEN_MAIN_MENU = 0
 SCREEN_LOGIN_MENU = 1

@@ -37,15 +37,11 @@ def show_game_screen(screen):
 
     config.TILE_SET = tiles
 
-    dungeon_grid = config.SPAWN_MAP
- 
     player_name = pygame.font.Font("resources/PixelOperator8.ttf", 16).render(config.local_username, True, (255, 255, 255))
 
     # Game loop
     colliders, exits = [], []
     
-    exit_counter = 0
-
     while config.running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -76,7 +72,10 @@ def show_game_screen(screen):
 
         screen.fill((0, 0, 0))
 
-        screen, colliders, exits = build_dungeon(screen, dungeon_grid)
+        if config.current_level == 0:
+            screen, colliders, exits = build_dungeon(screen, config.SPAWN_MAP)
+        else:
+            screen, colliders, exits = build_dungeon(screen, generate_dungeon('N'))
 
         #
         # MAIN GAME LOGIC START
@@ -99,9 +98,9 @@ def show_game_screen(screen):
                     player_y = round((height // 10) / player_size) * player_size
 
                 player_rect = pygame.Rect(player_x, player_y, collision_size, collision_size) 
-                exit_counter += 1
+                config.current_level += 1
 
-        if exit_counter >= 10:
+        if config.current_level >= 10:
             screen, colliders, exits = build_dungeon(screen, config.VICTORY_MAP)
 
             winner_text = pygame.font.Font("resources/PixelOperator8.ttf", 16).render("YOU ARE A WINNER!", True, (255, 215, 0))
