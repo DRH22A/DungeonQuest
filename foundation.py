@@ -9,7 +9,7 @@ import config
 from dungeon_builder import build_dungeon
 from dungeon_generator import generate_dungeon
 from textbox import InputBox
-
+import time
 def show_game_screen(screen):
     width, height = config.WIDTH, config.HEIGHT
     pygame.display.set_caption("Dungeon Quest")
@@ -38,6 +38,12 @@ def show_game_screen(screen):
     config.TILE_SET = tiles
 
     player_name = pygame.font.Font("resources/PixelOperator8.ttf", 16).render(config.local_username, True, (255, 255, 255))
+
+    levels = config.levels
+    for n in range(1, 11):  
+        seed = int(time.time()) + n  # Ensure unique seeds for each level
+        config.levels[f'LEVEL_{n}'] = generate_dungeon(seed)
+
 
     # Game loop
     colliders, exits = [], []
@@ -74,22 +80,30 @@ def show_game_screen(screen):
 
         if config.current_level == 0:
             screen, colliders, exits = build_dungeon(screen, config.SPAWN_MAP)
+        elif config.current_level >= 10:
+            screen, colliders, exits = build_dungeon(screen, config.VICTORY_MAP)
         else:
-            screen, colliders, exits = build_dungeon(screen, generate_dungeon('N'))
+            level_key = f'LEVEL_{config.current_level}'
+            if level_key in levels:
+                screen, colliders, exits = build_dungeon(screen, levels[level_key])
+            else:
+                screen, colliders, exits = build_dungeon(screen, generate_dungeon(config.SPAWN_MAP))
+
 
         #
         # MAIN GAME LOGIC START
         #
 
         for i, _ in enumerate(exits[0]):
-            if player_rect.colliderect(exits[1][i]):
-                screen, colliders, exits = build_dungeon(screen, generate_dungeon(exits[0][i]))
+            if exits and i < len(exits[0]) and player_rect.colliderect(exits[1][i]):
                 if exits[0][i] == 'R':
-                    player_x = round((width // 10) / player_size) * player_size
-                    player_y = round((height // 2) / player_size) * player_size
+                    player_x = round((width // 20) / player_size) * player_size
+                    player_y = round((height // 20) / player_size) * player_size
+                    config.current_level += 1
                 elif exits[0][i] == 'L':
                     player_x = round((width - (width // 10)) / player_size) * player_size
-                    player_y = round((height // 2) / player_size) * player_size
+                    player_y = round((height - (height // 9)) / player_size) * player_size
+                    config.current_level -= 1
                 elif exits[0][i] == 'U':
                     player_x = round((width // 2) / player_size) * player_size
                     player_y = round((height - (height // 9)) / player_size) * player_size
@@ -97,8 +111,9 @@ def show_game_screen(screen):
                     player_x = round((width // 2) / player_size) * player_size
                     player_y = round((height // 10) / player_size) * player_size
 
-                player_rect = pygame.Rect(player_x, player_y, collision_size, collision_size) 
-                config.current_level += 1
+                player_rect = pygame.Rect(player_x, player_y, collision_size, collision_size)
+
+                
 
         if config.current_level >= 10:
             screen, colliders, exits = build_dungeon(screen, config.VICTORY_MAP)
