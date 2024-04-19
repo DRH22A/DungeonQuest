@@ -2,13 +2,31 @@
 import pygame
 from pygame.locals import *
 import threading
-
+import multiprocessing
 from colorama import Fore, Back, Style
 
 import config
 from dungeon_builder import build_dungeon
 from dungeon_generator import generate_dungeon
 from textbox import InputBox
+import time
+
+def generate_dungeon_wrapper(level_seed):
+    level, seed = level_seed
+    print(f"Process starting for seed: {seed}, level: {level}")
+    start_time = time.perf_counter()
+    
+    # Linear scaling of complexity from 0.5 to 1.0 based on level
+    if level <= 10:
+        complexity = 0.1 + (0.9 * ((level - 1) / 9) ** 2)  # Exponential growth within first 10 levels
+    else:
+        complexity = 1.0  # Maximum complexity for levels beyond 10
+    result = generate_dungeon(seed=seed, complexity=complexity)
+    end_time = time.perf_counter()
+    duration = end_time - start_time
+    print(f"Process finished for seed: {seed}, Level: {level}, Duration: {duration:.5f} seconds")
+    return result
+
 
 def show_game_screen(screen):
     width, height = config.WIDTH, config.HEIGHT
@@ -26,6 +44,7 @@ def show_game_screen(screen):
     player_rect = pygame.Rect(player_x, player_y, collision_size, collision_size) 
 
     # Load tileset
+    level_font = pygame.font.Font("resources/PixelOperator8.ttf", 24)
     tileset = pygame.image.load("resources/tileset.png")
     tile_size = 16
     tiles = []
@@ -38,6 +57,13 @@ def show_game_screen(screen):
     config.TILE_SET = tiles
 
     player_name = pygame.font.Font("resources/PixelOperator8.ttf", 16).render(config.local_username, True, (255, 255, 255))
+
+    with multiprocessing.Pool() as pool:
+        seeds = [(n, int(time.time()) + n) for n in range(1, 11)]
+        levels_data = pool.map(generate_dungeon_wrapper, seeds)
+        for n, data in enumerate(levels_data, 1):
+            config.levels[f'LEVEL_{n}'] = data
+
 
     # Game loop
     colliders, exits = [], []
@@ -74,22 +100,30 @@ def show_game_screen(screen):
 
         if config.current_level == 0:
             screen, colliders, exits = build_dungeon(screen, config.SPAWN_MAP)
+        elif config.current_level > 10:
+            screen, colliders, exits = build_dungeon(screen, config.VICTORY_MAP)
         else:
-            screen, colliders, exits = build_dungeon(screen, generate_dungeon('N'))
+            level_key = f'LEVEL_{config.current_level}'
+            if level_key in config.levels:
+                screen, colliders, exits = build_dungeon(screen, config.levels[level_key])
+            else:
+                screen, colliders, exits = build_dungeon(screen, generate_dungeon(config.SPAWN_MAP))
+
 
         #
         # MAIN GAME LOGIC START
         #
 
         for i, _ in enumerate(exits[0]):
-            if player_rect.colliderect(exits[1][i]):
-                screen, colliders, exits = build_dungeon(screen, generate_dungeon(exits[0][i]))
+            if exits and i < len(exits[0]) and player_rect.colliderect(exits[1][i]):
                 if exits[0][i] == 'R':
-                    player_x = round((width // 10) / player_size) * player_size
-                    player_y = round((height // 2) / player_size) * player_size
+                    player_x = round((width // 20) / player_size) * player_size
+                    player_y = round((height // 20) / player_size) * player_size
+                    config.current_level += 1
                 elif exits[0][i] == 'L':
                     player_x = round((width - (width // 10)) / player_size) * player_size
-                    player_y = round((height // 2) / player_size) * player_size
+                    player_y = round((height - (height // 9)) / player_size) * player_size
+                    config.current_level -= 1
                 elif exits[0][i] == 'U':
                     player_x = round((width // 2) / player_size) * player_size
                     player_y = round((height - (height // 9)) / player_size) * player_size
@@ -97,10 +131,11 @@ def show_game_screen(screen):
                     player_x = round((width // 2) / player_size) * player_size
                     player_y = round((height // 10) / player_size) * player_size
 
-                player_rect = pygame.Rect(player_x, player_y, collision_size, collision_size) 
-                config.current_level += 1
+                player_rect = pygame.Rect(player_x, player_y, collision_size, collision_size)
 
-        if config.current_level >= 10:
+                
+
+        if config.current_level > 10:
             screen, colliders, exits = build_dungeon(screen, config.VICTORY_MAP)
 
             winner_text = pygame.font.Font("resources/PixelOperator8.ttf", 16).render("YOU ARE A WINNER!", True, (255, 215, 0))
@@ -116,6 +151,11 @@ def show_game_screen(screen):
         
         screen.blit(tiles[config.CHARACTER_TILE], (player_x, player_y))
         screen.blit(player_name, (player_x, player_y - 15))
+
+        if 1 <= config.current_level <= 10:
+            level_text = level_font.render(f"Level: {config.current_level}", True, (0, 0, 0))
+            screen.blit(level_text, (10, 10))  # Position at top-left corner
+
 
         pygame.display.flip()
 
