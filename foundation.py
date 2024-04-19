@@ -11,14 +11,20 @@ from dungeon_generator import generate_dungeon
 from textbox import InputBox
 import time
 
-def generate_dungeon_wrapper(seed):
-    print(f"Process starting for seed: {seed}")  # Print when the process starts
-    start_time = time.perf_counter()  # Use high-resolution timer
-    result = generate_dungeon(seed)  # Call the original dungeon generation function
-    end_time = time.perf_counter()  # Use high-resolution timer
+def generate_dungeon_wrapper(level_seed):
+    level, seed = level_seed
+    print(f"Process starting for seed: {seed}, level: {level}")
+    start_time = time.perf_counter()
+    
+    # Linear scaling of complexity from 0.5 to 1.0 based on level
+    complexity = 0.5 + (level / 20) * 0.5 if level <= 10 else 1.0
+
+    result = generate_dungeon(seed=seed, complexity=complexity)
+    end_time = time.perf_counter()
     duration = end_time - start_time
-    print(f"Process finished for seed: {seed}, Duration: {duration:.5f} seconds")  # Print when the process finishes rounded to five decimal places
+    print(f"Process finished for seed: {seed}, Level: {level}, Duration: {duration:.5f} seconds")
     return result
+
 
 def show_game_screen(screen):
     width, height = config.WIDTH, config.HEIGHT
@@ -36,6 +42,7 @@ def show_game_screen(screen):
     player_rect = pygame.Rect(player_x, player_y, collision_size, collision_size) 
 
     # Load tileset
+    level_font = pygame.font.Font("resources/PixelOperator8.ttf", 24)
     tileset = pygame.image.load("resources/tileset.png")
     tile_size = 16
     tiles = []
@@ -50,7 +57,7 @@ def show_game_screen(screen):
     player_name = pygame.font.Font("resources/PixelOperator8.ttf", 16).render(config.local_username, True, (255, 255, 255))
 
     with multiprocessing.Pool() as pool:
-        seeds = [int(time.time()) + n for n in range(1, 11)]
+        seeds = [(n, int(time.time()) + n) for n in range(1, 11)]
         levels_data = pool.map(generate_dungeon_wrapper, seeds)
         for n, data in enumerate(levels_data, 1):
             config.levels[f'LEVEL_{n}'] = data
@@ -91,7 +98,7 @@ def show_game_screen(screen):
 
         if config.current_level == 0:
             screen, colliders, exits = build_dungeon(screen, config.SPAWN_MAP)
-        elif config.current_level >= 10:
+        elif config.current_level > 10:
             screen, colliders, exits = build_dungeon(screen, config.VICTORY_MAP)
         else:
             level_key = f'LEVEL_{config.current_level}'
@@ -126,7 +133,7 @@ def show_game_screen(screen):
 
                 
 
-        if config.current_level >= 10:
+        if config.current_level > 10:
             screen, colliders, exits = build_dungeon(screen, config.VICTORY_MAP)
 
             winner_text = pygame.font.Font("resources/PixelOperator8.ttf", 16).render("YOU ARE A WINNER!", True, (255, 215, 0))
@@ -142,6 +149,11 @@ def show_game_screen(screen):
         
         screen.blit(tiles[config.CHARACTER_TILE], (player_x, player_y))
         screen.blit(player_name, (player_x, player_y - 15))
+
+        if 1 <= config.current_level <= 10:
+            level_text = level_font.render(f"Level: {config.current_level}", True, (0, 0, 0))
+            screen.blit(level_text, (10, 10))  # Position at top-left corner
+
 
         pygame.display.flip()
 
