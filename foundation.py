@@ -17,8 +17,10 @@ def generate_dungeon_wrapper(level_seed):
     start_time = time.perf_counter()
     
     # Linear scaling of complexity from 0.5 to 1.0 based on level
-    complexity = 0.5 + (level / 20) * 0.5 if level <= 10 else 1.0
-
+    if level <= 10:
+        complexity = 0.1 + (0.9 * ((level - 1) / 9) ** 2)  # Exponential growth within first 10 levels
+    else:
+        complexity = 1.0  # Maximum complexity for levels beyond 10
     result = generate_dungeon(seed=seed, complexity=complexity)
     end_time = time.perf_counter()
     duration = end_time - start_time
