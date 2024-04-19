@@ -2,7 +2,7 @@
 import pygame
 from pygame.locals import *
 import threading
-
+import multiprocessing
 from colorama import Fore, Back, Style
 
 import config
@@ -10,6 +10,16 @@ from dungeon_builder import build_dungeon
 from dungeon_generator import generate_dungeon
 from textbox import InputBox
 import time
+
+def generate_dungeon_wrapper(seed):
+    print(f"Process starting for seed: {seed}")  # Print when the process starts
+    start_time = time.perf_counter()  # Use high-resolution timer
+    result = generate_dungeon(seed)  # Call the original dungeon generation function
+    end_time = time.perf_counter()  # Use high-resolution timer
+    duration = end_time - start_time
+    print(f"Process finished for seed: {seed}, Duration: {duration:.5f} seconds")  # Print when the process finishes rounded to five decimal places
+    return result
+
 def show_game_screen(screen):
     width, height = config.WIDTH, config.HEIGHT
     pygame.display.set_caption("Dungeon Quest")
@@ -39,10 +49,11 @@ def show_game_screen(screen):
 
     player_name = pygame.font.Font("resources/PixelOperator8.ttf", 16).render(config.local_username, True, (255, 255, 255))
 
-    levels = config.levels
-    for n in range(1, 11):  
-        seed = int(time.time()) + n  # Ensure unique seeds for each level
-        config.levels[f'LEVEL_{n}'] = generate_dungeon(seed)
+    with multiprocessing.Pool() as pool:
+        seeds = [int(time.time()) + n for n in range(1, 11)]
+        levels_data = pool.map(generate_dungeon_wrapper, seeds)
+        for n, data in enumerate(levels_data, 1):
+            config.levels[f'LEVEL_{n}'] = data
 
 
     # Game loop
@@ -84,8 +95,8 @@ def show_game_screen(screen):
             screen, colliders, exits = build_dungeon(screen, config.VICTORY_MAP)
         else:
             level_key = f'LEVEL_{config.current_level}'
-            if level_key in levels:
-                screen, colliders, exits = build_dungeon(screen, levels[level_key])
+            if level_key in config.levels:
+                screen, colliders, exits = build_dungeon(screen, config.levels[level_key])
             else:
                 screen, colliders, exits = build_dungeon(screen, generate_dungeon(config.SPAWN_MAP))
 
