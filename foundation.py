@@ -39,6 +39,11 @@ def show_game_screen(screen):
     player_x = round((width // 2) / player_size) * player_size
     player_y = round((height // 2) / player_size) * player_size
 
+    player_speed = 0.1 
+    player_velocity = pygame.math.Vector2(0, 0)
+    player_acceleration = 0.5  # How quickly the player can change speed
+    friction = 0.9  # Simulate friction to stop the player smoothly
+
     player_speed = player_size
     key_pressed = False
     player_rect = pygame.Rect(player_x, player_y, collision_size, collision_size) 
@@ -73,26 +78,29 @@ def show_game_screen(screen):
             if event.type == pygame.QUIT:
                 config.running = False
 
-            if event.type == pygame.KEYUP:
-                key_pressed = False
+        keys = pygame.key.get_pressed()
 
-            keys = pygame.key.get_pressed()
-            old_position = player_rect.topleft
+        # Reset velocity each frame
+        player_velocity *= friction
 
-            if event.type == pygame.KEYDOWN and not key_pressed:
-                if keys[pygame.K_LEFT] and player_rect.x > 0:
-                    player_rect.move_ip(-player_speed, 0)
-                if keys[pygame.K_RIGHT] and player_rect.x < width - player_size:
-                    player_rect.move_ip(player_speed, 0)
-                if keys[pygame.K_UP] and player_rect.y > 0:
-                    player_rect.move_ip(0, -player_speed)
-                if keys[pygame.K_DOWN] and player_rect.y < height - player_size:
-                    player_rect.move_ip(0, player_speed)
- 
-                if any(player_rect.colliderect(c) for c in colliders):
-                    player_rect.topleft = old_position
+        # Update velocity based on key presses
+        if keys[pygame.K_LEFT]:
+            player_velocity.x -= player_acceleration
+        if keys[pygame.K_RIGHT]:
+            player_velocity.x += player_acceleration
+        if keys[pygame.K_UP]:
+            player_velocity.y -= player_acceleration
+        if keys[pygame.K_DOWN]:
+            player_velocity.y += player_acceleration
 
-                key_pressed = True
+        # Update player position based on velocity
+        player_rect.x += player_velocity.x
+        player_rect.y += player_velocity.y
+
+        # Check for collisions after moving
+        if any(player_rect.colliderect(c) for c in colliders):
+            player_rect.x -= player_velocity.x  # Move back horizontally
+            player_rect.y -= player_velocity.y  # Move back vertically
 
         player_x, player_y = player_rect.topleft
 
