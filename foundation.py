@@ -16,11 +16,10 @@ def generate_dungeon_wrapper(level_seed):
     print(f"Process starting for seed: {seed}, level: {level}")
     start_time = time.perf_counter()
     
-    # Linear scaling of complexity from 0.5 to 1.0 based on level
     if level <= 10:
-        complexity = 0.1 + (0.9 * ((level - 1) / 9) ** 2)  # Exponential growth within first 10 levels
+        complexity = 0.1 + (0.9 * ((level - 1) / 9) ** 2)  
     else:
-        complexity = 1.0  # Maximum complexity for levels beyond 10
+        complexity = 1.0  
     result = generate_dungeon(seed=seed, complexity=complexity)
     end_time = time.perf_counter()
     duration = end_time - start_time
@@ -154,7 +153,7 @@ def show_game_screen(screen):
 
         if 1 <= config.current_level <= 10:
             level_text = level_font.render(f"Level: {config.current_level}", True, (0, 0, 0))
-            screen.blit(level_text, (10, 10))  # Position at top-left corner
+            screen.blit(level_text, (10, 10))  
 
 
         pygame.display.flip()
