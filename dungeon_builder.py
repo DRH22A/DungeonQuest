@@ -22,6 +22,7 @@ def build_dungeon(screen: pygame.display, dungeon_grid: list[list[chr]]) -> list
     tile_wall = config.TILE_SET[config.WALL_TILE]
     tile_grass = config.TILE_SET[config.GRASS_TILE]
     tile_exit = config.TILE_SET[config.EXIT_TILE]
+    tile_mob = config.TILE_SET[config.DRAGON_TILE]
 
     colliders = []
 
@@ -41,6 +42,16 @@ def build_dungeon(screen: pygame.display, dungeon_grid: list[list[chr]]) -> list
                 exit_colliders.append(pygame.Rect(x, y, TILE_SIZE, TILE_SIZE))
             elif dungeon_grid[row][col] == 'G':
                 screen.blit(tile_grass, (col * TILE_SIZE, row * TILE_SIZE))
+            elif dungeon_grid[row][col] == 'M':
+                mob_info = {
+                    'start_health': 100,  
+                    'current_health': 100,
+                    'position': (col, row),
+                    'tile_index': config.DRAGON_TILE  
+                }
+                mobs.append(mob_info)
+                mob_tile = config.TILE_SET[mob_info['tile_index']]
+                screen.blit(mob_tile, (x, y))
 
     
-    return [screen, colliders, [exits, exit_colliders]]
+    return [screen, colliders, [exits, exit_colliders, mobs]]

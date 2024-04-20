@@ -57,6 +57,8 @@ def show_game_screen(screen):
 
     player_name = pygame.font.Font("resources/PixelOperator8.ttf", 16).render(config.local_username, True, (255, 255, 255))
 
+    # Generate maps in parallel
+
     with multiprocessing.Pool() as pool:
         seeds = [(n, int(time.time()) + n) for n in range(1, 11)]
         levels_data = pool.map(generate_dungeon_wrapper, seeds)
