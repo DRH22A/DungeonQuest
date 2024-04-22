@@ -1,14 +1,12 @@
 # main.py
 import pygame
 from pygame.locals import *
-import threading
 import multiprocessing
 from colorama import Fore, Back, Style
 
 import config
 from dungeon_builder import build_dungeon
 from dungeon_generator import generate_dungeon
-from textbox import InputBox
 import time
 
 def generate_dungeon_wrapper(level_seed):
