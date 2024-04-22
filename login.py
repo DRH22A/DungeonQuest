@@ -66,13 +66,6 @@ def show_login_screen(screen):
                     )
                     cursor = connection.cursor(dictionary=True)
 
-                    # create users table if it doesn't exist
-                    cursor.execute("""CREATE TABLE IF NOT EXISTS users(
-                                    id INTEGER PRIMARY KEY AUTO_INCREMENT,
-                                    username VARCHAR(255) NOT NULL UNIQUE,
-                                    password VARCHAR(255) NOT NULL,
-                                    role VARCHAR(10) NOT NULL)""")
-
                     if sign_up_rect.collidepoint(event.pos):
                         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
