@@ -3,6 +3,8 @@ current_menu = 0
 
 running = True
 
+sql_connection = None
+
 local_username = None
 local_password = None
 

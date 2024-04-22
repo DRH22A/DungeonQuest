@@ -160,5 +160,7 @@ def show_game_screen(screen):
         # TODO: Network this change
         config.current_level = 0
 
+    config.sql_connection.close()
+
     print(Fore.BLUE + "Goodbye!" + Style.RESET_ALL)
     pygame.quit()

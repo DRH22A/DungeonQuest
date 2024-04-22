@@ -1,6 +1,5 @@
 import pygame
 import sys
-import sqlite3
 import mysql.connector
 import bcrypt
 import os
@@ -26,11 +25,9 @@ def show_login_screen(screen):
 
     pygame.display.set_caption("DungeonQuest Login Screen")
 
-    text = 'test'
+    text = 'Enter your username and password to sign up or sign in'
     color = (255, 255, 255)
     pos = (width // 2, height - 750)
-    # message = pygame.font.Font("resources/PixelOperator8.ttf", 16).render("test", True, (255, 255, 255))
-    # message_rect = message.get_rect(center=(width // 2, height - 750))
 
     input_box_username = InputBox(width // 2 - 100, height // 2 - 160, 200, 32)
     input_box_password = InputBox(width // 2 - 100, height // 2 - 100, 200, 32)
@@ -61,7 +58,7 @@ def show_login_screen(screen):
                     if not os.path.exists('instance'):
                         os.makedirs('instance')
 
-                    connection = mysql.connector.connect(
+                    connection = config.sql_connection = mysql.connector.connect(
                         host="cop4521-dungeonquest.c3gw2k8i8nc0.us-east-1.rds.amazonaws.com",
                         user="cop4521",
                         password="COP4521!",
@@ -82,11 +79,12 @@ def show_login_screen(screen):
                         try:
                             cursor.execute("""INSERT INTO users (username, password, role) VALUES (%s, %s, %s)""",
                                       (username, hashed_password, 'Admin' if is_admin else 'Player'))
+                            text = "Sign Up Successful"
                             print(Fore.GREEN + "Sign Up Successful")
                             if is_admin:
                                 print(Fore.BLUE + "You have been signed up as an admin!")
                             print(Fore.GREEN + "You may now sign in to the game!" + Style.RESET_ALL)
-                        except sqlite3.IntegrityError:
+                        except mysql.connector.errors.IntegrityError as e:
                             print(Fore.RED + "Username already taken!" + Style.RESET_ALL)
 
                     if sign_in_rect.collidepoint(event.pos):
@@ -100,19 +98,13 @@ def show_login_screen(screen):
 
                             return config.SCREEN_GAME
                         else:
-                            # message = pygame.font.Font("resources/PixelOperator8.ttf", 16).render("Invalid username "
-                            #                                                                       "or password", True,
-                            #                                                                       (255, 255, 255))
                             text = "Invalid username or password"
                             color = (255, 255, 255)
                             pos = (width // 2, height - 750)
 
-                            # message = (screen, text, font, color, pos)
-
                             print(Fore.RED + "Invalid username or password" + Style.RESET_ALL)
 
                     connection.commit()
-                    connection.close()
 
             for box in input_boxes:
                 box.handle_event(event)
