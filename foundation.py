@@ -99,7 +99,7 @@ def show_game_screen(screen):
 
         if config.current_level == 0:
             screen, colliders, exits = build_dungeon(screen, config.SPAWN_MAP)
-        elif config.current_level > 10:
+        elif config.current_level > 5:
             screen, colliders, exits = build_dungeon(screen, config.VICTORY_MAP)
         else:
             level_key = f'LEVEL_{config.current_level}'
@@ -134,11 +134,11 @@ def show_game_screen(screen):
 
                 
 
-        if config.current_level > 10:
+        if config.current_level > 5:
             screen, colliders, exits = build_dungeon(screen, config.VICTORY_MAP)
 
             winner_text = pygame.font.Font("resources/PixelOperator8.ttf", 16).render("YOU ARE A WINNER!", True, (255, 215, 0))
-            delete_text = pygame.font.Font("resources/PixelOperator8.ttf", 11).render("Exit the game to delete your account and play again!", True, (255, 255, 255))
+            delete_text = pygame.font.Font("resources/PixelOperator8.ttf", 11).render("Exit the game to play again!", True, (255, 255, 255))
             screen.blit(winner_text, ((width / 2) - (winner_text.get_width() / 2), height / 2 - 50))
             screen.blit(delete_text, ((width / 2) - (delete_text.get_width() / 2), (height / 2) - (delete_text.get_height()) - 10))
 
@@ -151,12 +151,16 @@ def show_game_screen(screen):
         screen.blit(tiles[config.CHARACTER_TILE], (player_x, player_y))
         screen.blit(player_name, (player_x, player_y - 15))
 
-        if 1 <= config.current_level <= 10:
+        if 1 <= config.current_level <= 5:
             level_text = level_font.render(f"Level: {config.current_level}", True, (0, 0, 0))
             screen.blit(level_text, (10, 10))  
 
 
         pygame.display.flip()
+
+    if config.current_level > 5:
+        # TODO: Network this change
+        config.current_level = 0
 
     print(Fore.BLUE + "Goodbye!" + Style.RESET_ALL)
     pygame.quit()

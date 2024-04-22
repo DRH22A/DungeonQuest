@@ -5,7 +5,11 @@ pip install -r requirements.txt
 python3 ./main.py
 ```
 
-## Requirements:
+## Sources
+- PixelOperator Font (Public domain)
+- Tileset (https://dwarffortresswiki.org/Tileset_repository)
+
+## Requirements
 The course project should involve interaction with a database and apply the principles of information management, role-based access, secure computing principles, and either parallel or distributed
 computing principles.
 
