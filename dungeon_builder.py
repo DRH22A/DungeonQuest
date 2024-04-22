@@ -36,7 +36,12 @@ def build_dungeon(screen: pygame.display, dungeon_grid: list[list[chr]]) -> list
                 screen.blit(tile_wall, (col * TILE_SIZE, row * TILE_SIZE))
                 colliders.append(pygame.Rect(x, y, TILE_SIZE, TILE_SIZE))
             elif dungeon_grid[row][col] in ['U', 'L', 'D', 'R']:
-                screen.blit(tile_exit, (col * TILE_SIZE, row * TILE_SIZE))
+                if dungeon_grid[row][col] == 'L':
+                    screen.blit(config.TILE_SET[config.LARROW_TILE], (col * TILE_SIZE, row * TILE_SIZE))
+                elif dungeon_grid[row][col] == 'R':
+                    screen.blit(config.TILE_SET[config.RARROW_TILE], (col * TILE_SIZE, row * TILE_SIZE))
+                else:
+                    screen.blit(tile_exit, (col * TILE_SIZE, row * TILE_SIZE))
                 exits.append(dungeon_grid[row][col])
                 exit_colliders.append(pygame.Rect(x, y, TILE_SIZE, TILE_SIZE))
             elif dungeon_grid[row][col] == 'G':
