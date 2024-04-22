@@ -1,7 +1,5 @@
 import pygame
 import sys
-import mysql.connector
-import bcrypt
 import os
 
 from colorama import Fore, Back, Style
@@ -37,9 +35,8 @@ def show_player_menu(screen):
                 mouse_pos = event.pos
                 if start_button.collidepoint(mouse_pos):
                     return config.SCREEN_GAME
-                elif stats_button.collidepoint(mouse_pos):
-                    # Go to stats menu
-                    pass
+                #elif stats_button.collidepoint(mouse_pos):
+                    #return config.STATS
                 elif exit_button.collidepoint(mouse_pos):
                     pygame.quit()
                     quit()
@@ -49,7 +46,6 @@ def show_player_menu(screen):
         pygame.draw.rect(screen, (0, 0, 0), start_button)
         pygame.draw.rect(screen, (0, 0, 0), stats_button)
         pygame.draw.rect(screen, (0, 0, 0), exit_button)
-
 
         # Button labels
         draw_text(screen, "Start", (255, 255, 255), (width // 2, height // 2 - 90))
