@@ -6,6 +6,7 @@ with contextlib.redirect_stdout(None):
 import title
 import login
 import foundation
+import player_menu
 import config
 
 from colorama import Fore, Back, Style
@@ -22,6 +23,7 @@ if __name__ == "__main__":
             config.current_menu = title.show_title_screen(screen)
         elif config.current_menu == config.SCREEN_LOGIN_MENU:
             config.current_menu = login.show_login_screen(screen)
+        elif config.current_menu == config.SCREEN_PLAYER_MENU:
+            config.current_menu = player_menu.show_player_menu(screen)
         elif config.current_menu == config.SCREEN_GAME:
             foundation.show_game_screen(screen)
-

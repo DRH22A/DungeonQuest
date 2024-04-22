@@ -1,7 +1,4 @@
-cryptography
 pygame
-pyzmq
-wtforms
-pyautogui
-pygetwindow
 mysql-connector-python
+bcrypt
+colorama

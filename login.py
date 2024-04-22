@@ -90,7 +90,7 @@ def show_login_screen(screen):
                             config.local_username = username
                             config.local_password = user.get('password')
 
-                            return config.SCREEN_GAME
+                            return config.SCREEN_PLAYER_MENU
                         else:
                             text = "Invalid username or password"
                             color = (255, 255, 255)
