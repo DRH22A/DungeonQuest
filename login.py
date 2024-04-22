@@ -57,12 +57,23 @@ def draw_text(screen, text: str, pos: tuple):
     font = pygame.font.Font("resources/PixelOperator8.ttf", 16)
     txt_surface = font.render(text, True, pygame.Color('white'))
     screen.blit(txt_surface, pos)
-    
+
+
+def message_text(screen, text, color, pos):
+    text_surface = pygame.font.Font("resources/PixelOperator8.ttf", 16).render(text, True, color)
+    text_rect = text_surface.get_rect(center=pos)
+    screen.blit(text_surface, text_rect.topleft)
 
 def show_login_screen(screen):
     width, height = config.WIDTH, config.HEIGHT
 
     pygame.display.set_caption("DungeonQuest Login Screen")
+
+    text = 'test'
+    color = (255, 255, 255)
+    pos = (width // 2, height - 750)
+    # message = pygame.font.Font("resources/PixelOperator8.ttf", 16).render("test", True, (255, 255, 255))
+    # message_rect = message.get_rect(center=(width // 2, height - 750))
 
     input_box_username = InputBox(width // 2 - 100, height // 2 - 160, 200, 32)
     input_box_password = InputBox(width // 2 - 100, height // 2 - 100, 200, 32)
@@ -132,6 +143,15 @@ def show_login_screen(screen):
 
                             return config.SCREEN_GAME
                         else:
+                            # message = pygame.font.Font("resources/PixelOperator8.ttf", 16).render("Invalid username "
+                            #                                                                       "or password", True,
+                            #                                                                       (255, 255, 255))
+                            text = "Invalid username or password"
+                            color = (255, 255, 255)
+                            pos = (width // 2, height - 750)
+
+                            # message = (screen, text, font, color, pos)
+
                             print(Fore.RED + "Invalid username or password" + Style.RESET_ALL)
 
                     connection.commit()
@@ -150,8 +170,11 @@ def show_login_screen(screen):
             pygame.draw.rect(screen, (0, 255, 0), is_admin_rect.inflate(-5, -5)) 
 
         draw_text(screen, "Sign up as admin!", (width // 2 - 70, height // 2 - 38))
-        
+        message_text(screen, text, color, pos)
+
         screen.blit(sign_up_button, sign_up_rect.topleft)
         screen.blit(sign_in_button, sign_in_rect.topleft)
+        # screen.blit(message, message_rect.topleft)
+
         
         pygame.display.flip()
