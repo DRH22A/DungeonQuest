@@ -1,6 +1,8 @@
 # Global and volitile config data
 current_menu = 0
 
+primary_seed = 0
+
 running = True
 
 sql_connection = None
@@ -8,7 +10,8 @@ sql_connection = None
 local_username = None
 local_password = None
 
-# TODO: network this to sql db
+player_x      = 0
+player_y      = 0
 current_level = 0
 
 # Global constants

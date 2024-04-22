@@ -56,7 +56,10 @@ def show_game_screen(screen):
     player_name = pygame.font.Font("resources/PixelOperator8.ttf", 16).render(config.local_username, True, (255, 255, 255))
 
     with multiprocessing.Pool() as pool:
-        seeds = [(n, int(time.time()) + n) for n in range(1, 11)]
+        if config.seed == 0:
+            config.seed = int(time.time())
+
+        seeds = [(n, config.seed + n) for n in range(1, 11)]
         levels_data = pool.map(generate_dungeon_wrapper, seeds)
         for n, data in enumerate(levels_data, 1):
             config.levels[f'LEVEL_{n}'] = data
@@ -153,12 +156,17 @@ def show_game_screen(screen):
             level_text = level_font.render(f"Level: {config.current_level}", True, (0, 0, 0))
             screen.blit(level_text, (10, 10))  
 
-
         pygame.display.flip()
 
     if config.current_level > 5:
-        # TODO: Network this change
+        config.primary_seed = 0
         config.current_level = 0
+        config.player_x = round((width // 2) / player_size) * player_size
+        config.player_y = round((height // 2) / player_size) * player_size
+    else:
+        config.player_x = player_x
+        config.player_y = player_y
+
 
     config.sql_connection.close()
 
