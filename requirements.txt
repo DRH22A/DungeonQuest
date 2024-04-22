@@ -1,11 +1,7 @@
-flask
-flask_sqlalchemy
-flask_login
 cryptography
 pygame
 pyzmq
-flask_wtf
 wtforms
-flask_bcrypt
 pyautogui
 pygetwindow
+mysql-connector-python
