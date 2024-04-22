@@ -45,7 +45,7 @@ def build_dungeon(screen: pygame.display, dungeon_grid: list[list[chr]]) -> list
                 exits.append(dungeon_grid[row][col])
                 exit_colliders.append(pygame.Rect(x, y, TILE_SIZE, TILE_SIZE))
             elif dungeon_grid[row][col] == 'G':
-                screen.blit(tile_grass, (col * TILE_SIZE, row * TILE_SIZE))
+                screen.blit(config.TILE_SET[config.GOLD_TILE], (col * TILE_SIZE, row * TILE_SIZE))
 
     
     return [screen, colliders, [exits, exit_colliders]]
