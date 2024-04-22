@@ -23,3 +23,6 @@ See `requirements.txt`
 ## Separation of work
 ### Jack Brower
 Graphics & UI, dungeon building, game logic, project structure
+
+### Daniel Halterman
+Early development, wrote the reports, server building, player menu, account bound resources
