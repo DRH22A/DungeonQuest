@@ -114,6 +114,7 @@ def show_login_screen(screen):
                                 config.admin = True
 
                             config.sql_connection = connection
+                            cursor = connection.cursor(dictionary=True)
 
                             # Load Player Save
                             cursor.execute("""SELECT level, x, y, seed FROM users WHERE username = %s""", (username,))
