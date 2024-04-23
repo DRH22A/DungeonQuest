@@ -14,6 +14,11 @@ from colorama import Fore, Back, Style
 
 if __name__ == "__main__":
     pygame.init()
+    pygame.mixer.init()
+
+    main_menu_music = pygame.mixer.Sound("resources/main_menu_music.wav")
+    
+    main_menu_music.play()
     
     screen = pygame.display.set_mode((config.WIDTH, config.HEIGHT))
 
@@ -27,6 +32,7 @@ if __name__ == "__main__":
         elif config.current_menu == config.SCREEN_PLAYER_MENU:
             config.current_menu = player_menu.show_player_menu(screen)
         elif config.current_menu == config.SCREEN_GAME:
+            main_menu_music.stop()
             foundation.show_game_screen(screen)
         elif config.current_menu == config.STATS:
             config.current_menu = stats_page.show_stats_screen(screen)  

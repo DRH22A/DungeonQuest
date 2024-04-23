@@ -4,6 +4,7 @@ import pygame
 from pygame.locals import *
 import multiprocessing
 from colorama import Fore, Back, Style
+import prettytable
 
 import config
 from dungeon_builder import build_dungeon
@@ -30,6 +31,11 @@ def show_game_screen(screen):
     width, height = config.WIDTH, config.HEIGHT
     pygame.display.set_caption("Dungeon Quest")
     pygame.key.set_repeat(1, 1)
+
+    win_music = pygame.mixer.Sound("resources/win_music.wav")
+    win_music_played = False
+
+    transition_sound = pygame.mixer.Sound("resources/transition_sound.wav")
 
     player_size = config.VISUAL_TILE_SIZE
     collision_size = player_size
@@ -93,6 +99,27 @@ def show_game_screen(screen):
                     player_rect.move_ip(0, -player_speed)
                 if keys[pygame.K_DOWN] and player_rect.y < height - player_size:
                     player_rect.move_ip(0, player_speed)
+
+                if keys[pygame.K_ESCAPE]:
+                    config.running = False
+                if keys[pygame.K_m] and config.admin:
+                    print(Fore.YELLOW + "Dumping SQL users table!" + Style.RESET_ALL)
+
+                    cursor = config.sql_connection.cursor()
+                    try:
+                        cursor.execute("SELECT * FROM users")
+                        columns = [i[0] for i in cursor.description]
+
+                        x = prettytable.PrettyTable(columns)
+                        rows = cursor.fetchall()
+
+                        for row in rows:
+                            x.add_row(row)
+                        
+                        print(x)
+
+                    except mysql.connector.Error as error:
+                        print(Fore.RED + f"Error: {error}" + Style.RESET_ALL)
  
                 if any(player_rect.colliderect(c) for c in colliders):
                     player_rect.topleft = old_position
@@ -125,10 +152,12 @@ def show_game_screen(screen):
                     player_x = round((width // 20) / player_size) * player_size
                     player_y = round((height // 20) / player_size) * player_size
                     config.current_level += 1
+                    transition_sound.play()
                 elif exits[0][i] == 'L':
                     player_x = round((width - (width // 10)) / player_size) * player_size
                     player_y = round((height - (height // 9)) / player_size) * player_size
                     config.current_level -= 1
+                    transition_sound.play()
                 elif exits[0][i] == 'U':
                     player_x = round((width // 2) / player_size) * player_size
                     player_y = round((height - (height // 9)) / player_size) * player_size
@@ -147,6 +176,10 @@ def show_game_screen(screen):
             delete_text = pygame.font.Font("resources/PixelOperator8.ttf", 11).render("Exit the game to play again!", True, (255, 255, 255))
             screen.blit(winner_text, ((width / 2) - (winner_text.get_width() / 2), height / 2 - 50))
             screen.blit(delete_text, ((width / 2) - (delete_text.get_width() / 2), (height / 2) - (delete_text.get_height()) - 10))
+
+            if not win_music_played:
+                win_music.play()
+                win_music_played = True
 
             
         #

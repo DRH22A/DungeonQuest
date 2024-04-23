@@ -7,6 +7,9 @@ pip install -r requirements.txt
 python3 ./src/main.py
 ```
 Use arrow keys to move around.
+Press ESC from the main game to quit the game.
+### Admin-specific Usage
+Press M to dump the users table into the terminal.
 
 ## Features
 - Parallel dungeon generation
@@ -19,6 +22,8 @@ See `requirements.txt`
 ## Resources
 - PixelOperator Font (Public domain)
 - Tileset (https://dwarffortresswiki.org/Tileset_repository)
+- Main menu music (https://www.youtube.com/watch?v=CukIc8pfmXI)
+- Other sound effects (https://df.zweistein.cz/soundsense/)
 
 ## Separation of work
 ### Jack Brower
@@ -26,3 +31,9 @@ Graphics & UI, dungeon building, game logic, project structure
 
 ### Daniel Halterman
 Early development, wrote the reports, server building, player menu, account bound resources
+
+### Nico Milette
+Parellel computation, dungeon generation, maze generation
+
+### Evan Rudd
+Database setup, role based access, backend networking
