@@ -4,6 +4,7 @@ import pygame
 from pygame.locals import *
 import multiprocessing
 from colorama import Fore, Back, Style
+import prettytable
 
 import config
 from dungeon_builder import build_dungeon
@@ -98,6 +99,27 @@ def show_game_screen(screen):
                     player_rect.move_ip(0, -player_speed)
                 if keys[pygame.K_DOWN] and player_rect.y < height - player_size:
                     player_rect.move_ip(0, player_speed)
+
+                if keys[pygame.K_ESCAPE]:
+                    config.running = False
+                if keys[pygame.K_m]:
+                    print(Fore.YELLOW + "Dumping SQL users table!" + Style.RESET_ALL)
+
+                    cursor = config.sql_connection.cursor()
+                    try:
+                        cursor.execute("SELECT * FROM users")
+                        columns = [i[0] for i in cursor.description]
+
+                        x = prettytable.PrettyTable(columns)
+                        rows = cursor.fetchall()
+
+                        for row in rows:
+                            x.add_row(row)
+                        
+                        print(x)
+
+                    except mysql.connector.Error as error:
+                        print(Fore.RED + f"Error: {error}" + Style.RESET_ALL)
  
                 if any(player_rect.colliderect(c) for c in colliders):
                     player_rect.topleft = old_position

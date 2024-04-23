@@ -7,6 +7,9 @@ pip install -r requirements.txt
 python3 ./src/main.py
 ```
 Use arrow keys to move around.
+Press ESC from the main game to quit the game.
+### Admin-specific Usage
+Press M to dump the users table into the terminal.
 
 ## Features
 - Parallel dungeon generation

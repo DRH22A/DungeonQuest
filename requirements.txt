@@ -2,3 +2,4 @@ pygame
 mysql-connector-python
 bcrypt
 colorama
+prettytable
