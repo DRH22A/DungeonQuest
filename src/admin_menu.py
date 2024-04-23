@@ -1,4 +1,7 @@
 import pygame
+import mysql.connector
+from colorama import Fore, Style
+from prettytable import prettytable
 
 import config
 from textbox import InputBox
@@ -29,6 +32,24 @@ def show_admin_menu(screen):
 
     input_box_user_id = InputBox(WIDTH // 2 - 100, HEIGHT // 2 - 160, 200, 32)
 
+    connection = config.sql_connection
+    cursor = connection.cursor(dictionary=False)
+    print(Fore.YELLOW + "Dumping SQL users table!" + Style.RESET_ALL)
+    try:
+        cursor.execute("SELECT * FROM users")
+        columns = [i[0] for i in cursor.description]
+
+        x = prettytable.PrettyTable(columns)
+        rows = cursor.fetchall()
+
+        for row in rows:
+            x.add_row(row)
+
+        print(x)
+
+    except mysql.connector.Error as error:
+        print(Fore.RED + f"Error: {error}" + Style.RESET_ALL)
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -42,7 +63,16 @@ def show_admin_menu(screen):
 
                     try:
                         if user_id != "":
-                            config.user_id = int(user_id)
+                            cursor = connection.cursor(dictionary=True)
+                            cursor.execute("""SELECT username, level, x, y, seed FROM users WHERE id = %s""", (user_id,))
+                            user = cursor.fetchone()
+                            if user.get('username') and user.get('level') and user.get('x') and user.get('y') and user.get('seed'):
+                                config.local_username = user.get('username')
+                                config.current_level = int(user.get('level'))
+                                config.player_x = int(user.get('x'))
+                                config.player_y = int(user.get('y'))
+                                config.seed = int(user.get('seed'))
+
                     except:
                         print("Invalid user ID")
 
