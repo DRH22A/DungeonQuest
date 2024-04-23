@@ -10,17 +10,17 @@ sql_connection = None
 local_username = None
 local_password = None
 
-player_x      = 0
-player_y      = 0
+player_x = 0
+player_y = 0
 current_level = 0
-seed          = 0 
+seed = 0
 
 # Global constants
 SCREEN_MAIN_MENU = 0
 SCREEN_LOGIN_MENU = 1
 SCREEN_PLAYER_MENU = 2
 SCREEN_GAME = 3
-#STATS = 4
+STATS = 4
 
 WIDTH = 1260
 HEIGHT = 900
@@ -32,7 +32,7 @@ TILE_SIZE = 16
 TILE_SET = []
 VISUAL_TILE_SIZE = 60
 
-CHARACTER_TILE = 1 
+CHARACTER_TILE = 1
 EXIT_TILE = 18
 GATE_TILE = 19
 RARROW_TILE = 26

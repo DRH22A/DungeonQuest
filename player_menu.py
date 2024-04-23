@@ -35,8 +35,8 @@ def show_player_menu(screen):
                 mouse_pos = event.pos
                 if start_button.collidepoint(mouse_pos):
                     return config.SCREEN_GAME
-                #elif stats_button.collidepoint(mouse_pos):
-                    #return config.STATS
+                elif stats_button.collidepoint(mouse_pos):
+                    return config.STATS
                 elif exit_button.collidepoint(mouse_pos):
                     pygame.quit()
                     quit()
