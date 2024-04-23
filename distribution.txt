@@ -34,7 +34,7 @@ Pushing the image to a registry makes it accessible to other team members and al
 
 Step 6: Deploying the Containerized Application on the Cloud:
 With the Docker image of our Pygame application stored in a container registry, we are ready to deploy it on the cloud using Amazon Web Services (AWS).
-AWS offers a comprehensive suite of cloud services, including container orchestration solutions that make it an ideal choice for deployingcontainerized applications.
+AWS offers a comprehensive suite of cloud services, including container orchestration solutions that make it an ideal choice for deploying containerized applications.
 To deploy our Pygame application on AWS, we leverage AWS's container orchestration service called Amazon Elastic Container Service (ECS).
 ECS allows us to easily run, stop, and manage Docker containers on a cluster of virtual servers called Amazon EC2 instances.
 
