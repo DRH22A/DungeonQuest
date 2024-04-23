@@ -31,6 +31,11 @@ def show_game_screen(screen):
     pygame.display.set_caption("Dungeon Quest")
     pygame.key.set_repeat(1, 1)
 
+    win_music = pygame.mixer.Sound("resources/win_music.mp3")
+    win_music_played = False
+
+    transition_sound = pygame.mixer.Sound("resources/transition_sound.mp3")
+
     player_size = config.VISUAL_TILE_SIZE
     collision_size = player_size
 
@@ -121,10 +126,12 @@ def show_game_screen(screen):
                     player_x = round((width // 20) / player_size) * player_size
                     player_y = round((height // 20) / player_size) * player_size
                     config.current_level += 1
+                    transition_sound.play()
                 elif exits[0][i] == 'L':
                     player_x = round((width - (width // 10)) / player_size) * player_size
                     player_y = round((height - (height // 9)) / player_size) * player_size
                     config.current_level -= 1
+                    transition_sound.play()
                 elif exits[0][i] == 'U':
                     player_x = round((width // 2) / player_size) * player_size
                     player_y = round((height - (height // 9)) / player_size) * player_size
@@ -143,6 +150,10 @@ def show_game_screen(screen):
             delete_text = pygame.font.Font("resources/PixelOperator8.ttf", 11).render("Exit the game to play again!", True, (255, 255, 255))
             screen.blit(winner_text, ((width / 2) - (winner_text.get_width() / 2), height / 2 - 50))
             screen.blit(delete_text, ((width / 2) - (delete_text.get_width() / 2), (height / 2) - (delete_text.get_height()) - 10))
+
+            if not win_music_played:
+                win_music.play()
+                win_music_played = True
 
             
         #

@@ -19,6 +19,8 @@ See `requirements.txt`
 ## Resources
 - PixelOperator Font (Public domain)
 - Tileset (https://dwarffortresswiki.org/Tileset_repository)
+- Main menu music (https://www.youtube.com/watch?v=CukIc8pfmXI)
+- Other sound effects (https://df.zweistein.cz/soundsense/)
 
 ## Separation of work
 ### Jack Brower
