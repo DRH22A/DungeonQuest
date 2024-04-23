@@ -111,6 +111,8 @@ def show_login_screen(screen):
                                     database="dungeonquest"
                                 )
 
+                            config.sql_connection = connection
+
                             # Load Player Save
                             cursor.execute("""SELECT level, x, y, seed FROM users WHERE username = %s""", (username,))
                             save = cursor.fetchone()
