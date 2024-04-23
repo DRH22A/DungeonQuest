@@ -9,6 +9,7 @@ from colorama import Fore, Back, Style
 import config
 from textbox import InputBox
 
+
 def draw_text(screen, text: str, pos: tuple):
     font = pygame.font.Font("resources/PixelOperator8.ttf", 16)
     txt_surface = font.render(text, True, pygame.Color('white'))
@@ -19,6 +20,7 @@ def message_text(screen, text, color, pos):
     text_surface = pygame.font.Font("resources/PixelOperator8.ttf", 16).render(text, True, color)
     text_rect = text_surface.get_rect(center=pos)
     screen.blit(text_surface, text_rect.topleft)
+
 
 def show_login_screen(screen):
     width, height = config.WIDTH, config.HEIGHT
@@ -71,7 +73,7 @@ def show_login_screen(screen):
 
                         try:
                             cursor.execute("""INSERT INTO users (username, password, role) VALUES (%s, %s, %s)""",
-                                      (username, hashed_password, 'Admin' if is_admin else 'Player'))
+                                           (username, hashed_password, 'Admin' if is_admin else 'Player'))
                             text = "Sign Up Successful"
                             print(Fore.GREEN + "Sign Up Successful")
                             if is_admin:
@@ -91,6 +93,25 @@ def show_login_screen(screen):
                             config.local_username = username
                             config.local_password = user.get('password')
 
+                            # Reconnect as Role
+                            cursor.execute("""SELECT role FROM users WHERE username = %s""", (username,))
+                            role = cursor.fetchone()
+                            if role.get('role') == 'Player':
+                                connection = mysql.connector.connect(
+                                    host="cop4521-dungeonquest.c3gw2k8i8nc0.us-east-1.rds.amazonaws.com",
+                                    user="player_user",
+                                    password="password",
+                                    database="dungeonquest"
+                                )
+                            else:
+                                connection = mysql.connector.connect(
+                                    host="cop4521-dungeonquest.c3gw2k8i8nc0.us-east-1.rds.amazonaws.com",
+                                    user="admin_user",
+                                    password="adminpass",
+                                    database="dungeonquest"
+                                )
+
+                            # Load Player Save
                             cursor.execute("""SELECT level, x, y, seed FROM users WHERE username = %s""", (username,))
                             save = cursor.fetchone()
 
@@ -119,7 +140,7 @@ def show_login_screen(screen):
 
         pygame.draw.rect(screen, (255, 255, 255), is_admin_rect, 2)
         if is_admin:
-            pygame.draw.rect(screen, (0, 255, 0), is_admin_rect.inflate(-5, -5)) 
+            pygame.draw.rect(screen, (0, 255, 0), is_admin_rect.inflate(-5, -5))
 
         draw_text(screen, "Sign up as admin!", (width // 2 - 70, height // 2 - 38))
         message_text(screen, text, color, pos)
@@ -128,5 +149,4 @@ def show_login_screen(screen):
         screen.blit(sign_in_button, sign_in_rect.topleft)
         # screen.blit(message, message_rect.topleft)
 
-        
         pygame.display.flip()
