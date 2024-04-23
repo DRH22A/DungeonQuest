@@ -60,7 +60,7 @@ def show_game_screen(screen):
         if config.seed == 0:
             config.seed = int(time.time())
 
-        seeds = [(n, config.seed + n) for n in range(1, 11)]
+        seeds = [(n, config.seed + n) for n in range(1, 6)]
         levels_data = pool.map(generate_dungeon_wrapper, seeds)
         for n, data in enumerate(levels_data, 1):
             config.levels[f'LEVEL_{n}'] = data
@@ -177,7 +177,7 @@ def show_game_screen(screen):
                                (None, None, None, None, config.local_username))
             else:
                 cursor.execute("""UPDATE users SET level = %s, x = %s, y = %s, seed = %s WHERE username = %s""",
-                               (config.current_level, player_x, player_y, config.primary_seed, config.local_username))
+                               (config.current_level, player_x, player_y, config.seed, config.local_username))
 
             connection.commit()
             print(Fore.GREEN + "Game Saved!" + Style.RESET_ALL)

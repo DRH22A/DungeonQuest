@@ -1,8 +1,6 @@
 # Global and volitile config data
 current_menu = 0
 
-primary_seed = 0
-
 running = True
 
 sql_connection = None
