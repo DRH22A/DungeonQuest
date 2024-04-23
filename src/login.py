@@ -90,6 +90,14 @@ def show_login_screen(screen):
                             config.local_username = username
                             config.local_password = user.get('password')
 
+                            cursor.execute("""SELECT level, x, y, seed FROM users WHERE username = %s""", (username,))
+                            save = cursor.fetchone()
+
+                            if save.get('level') and save.get('x') and save.get('y') and save.get('seed'):
+                                config.current_level = int(save.get('level'))
+                                config.player_x = int(save.get('x'))
+                                config.player_y = int(save.get('y'))
+                                config.seed = int(save.get('seed'))
                             return config.SCREEN_PLAYER_MENU
                         else:
                             text = "Invalid username or password"
