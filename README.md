@@ -4,7 +4,7 @@ This is a cloud-saving Dungeon Crawler developed with Pygame and designed to all
 ## Usage
 ```
 pip install -r requirements.txt
-python3 ./main.py
+python3 ./src/main.py
 ```
 Use arrow keys to move around.
 
