@@ -37,6 +37,10 @@ def show_game_screen(screen):
     player_x = round((width // 2) / player_size) * player_size
     player_y = round((height // 2) / player_size) * player_size
 
+    if config.player_x and config.player_y:
+        player_x = config.player_x
+        player_y = config.player_y
+
     player_speed = player_size
     key_pressed = False
     player_rect = pygame.Rect(player_x, player_y, collision_size, collision_size) 
