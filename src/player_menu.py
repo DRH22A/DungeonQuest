@@ -25,6 +25,9 @@ def show_player_menu(screen):
     stats_button = pygame.Rect(width // 2 - button_width // 2 + 25, height // 2 - 30, button_width, button_height)
     exit_button = pygame.Rect(width // 2 - button_width // 2 + 25, height // 2 + 40, button_width, button_height)
 
+    if config.admin:
+        admin_button = pygame.Rect(width // 2 - button_width // 2 + 25, height // 2 - 150, button_width, button_height)
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -37,6 +40,8 @@ def show_player_menu(screen):
                     return config.SCREEN_GAME
                 elif stats_button.collidepoint(mouse_pos):
                     return config.STATS
+                elif config.admin and admin_button.collidepoint(mouse_pos):
+                    return config.SCREEN_ADMIN_MENU
                 elif exit_button.collidepoint(mouse_pos):
                     pygame.quit()
                     quit()
@@ -51,5 +56,9 @@ def show_player_menu(screen):
         draw_text(screen, "Start", (255, 255, 255), (width // 2, height // 2 - 90))
         draw_text(screen, "Stats", (255, 255, 255), (width // 2, height // 2 - 20))
         draw_text(screen, "Exit", (255, 255, 255), (width // 2 + 10, height // 2 + 50))
+
+        if config.admin:
+            pygame.draw.rect(screen, (0, 0, 0), admin_button)
+            draw_text(screen, "Admin Menu", (255, 255, 255), (width // 2 - 40, height // 2 - 150))
 
         pygame.display.flip()

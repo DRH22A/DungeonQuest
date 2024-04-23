@@ -7,6 +7,7 @@ sql_connection = None
 
 local_username = None
 local_password = None
+user_id = None
 
 player_x = 0
 player_y = 0
@@ -19,6 +20,7 @@ SCREEN_MAIN_MENU = 0
 SCREEN_LOGIN_MENU = 1
 SCREEN_PLAYER_MENU = 2
 SCREEN_GAME = 3
+SCREEN_ADMIN_MENU = 5
 STATS = 4
 
 WIDTH = 1260

@@ -1,4 +1,4 @@
-# main.py
+# Import necessary libraries
 import mysql.connector
 import pygame
 from pygame.locals import *
@@ -6,11 +6,13 @@ import multiprocessing
 from colorama import Fore, Back, Style
 import prettytable
 
+# Import custom modules
 import config
 from dungeon_builder import build_dungeon
 from dungeon_generator import generate_dungeon
 import time
 
+# Function to generate dungeon asynchronously
 def generate_dungeon_wrapper(level_seed):
     level, seed = level_seed
     print(f"Process starting for seed: {seed}, level: {level}")
@@ -26,27 +28,30 @@ def generate_dungeon_wrapper(level_seed):
     print(f"Process finished for seed: {seed}, Level: {level}, Duration: {duration:.5f} seconds")
     return result
 
-
+# Function to display the game screen
 def show_game_screen(screen):
+    # Set up game environment
     width, height = config.WIDTH, config.HEIGHT
     pygame.display.set_caption("Dungeon Quest")
     pygame.key.set_repeat(1, 1)
 
+    # Load sounds
     win_music = pygame.mixer.Sound("resources/win_music.wav")
     win_music_played = False
-
     transition_sound = pygame.mixer.Sound("resources/transition_sound.wav")
 
+    # Set player attributes
     player_size = config.VISUAL_TILE_SIZE
     collision_size = player_size
-
     player_x = round((width // 2) / player_size) * player_size
     player_y = round((height // 2) / player_size) * player_size
 
+    # Adjust player position if loaded from saved data
     if config.player_x and config.player_y:
         player_x = config.player_x
         player_y = config.player_y
 
+    # Set player movement speed and initial state
     player_speed = player_size
     key_pressed = False
     player_rect = pygame.Rect(player_x, player_y, collision_size, collision_size) 
@@ -64,8 +69,10 @@ def show_game_screen(screen):
 
     config.TILE_SET = tiles
 
+    # Render player's name
     player_name = pygame.font.Font("resources/PixelOperator8.ttf", 16).render(config.local_username, True, (255, 255, 255))
 
+    # Generate dungeon levels asynchronously
     with multiprocessing.Pool() as pool:
         if config.seed == 0:
             config.seed = int(time.time())
@@ -74,7 +81,6 @@ def show_game_screen(screen):
         levels_data = pool.map(generate_dungeon_wrapper, seeds)
         for n, data in enumerate(levels_data, 1):
             config.levels[f'LEVEL_{n}'] = data
-
 
     # Game loop
     colliders, exits = [], []
@@ -130,6 +136,7 @@ def show_game_screen(screen):
 
         screen.fill((0, 0, 0))
 
+        # Build dungeon based on current level
         if config.current_level == 0:
             screen, colliders, exits = build_dungeon(screen, config.SPAWN_MAP)
         elif config.current_level > 5:
@@ -141,11 +148,7 @@ def show_game_screen(screen):
             else:
                 screen, colliders, exits = build_dungeon(screen, generate_dungeon(config.SPAWN_MAP))
 
-
-        #
-        # MAIN GAME LOGIC START
-        #
-
+        # Main game logic
         for i, _ in enumerate(exits[0]):
             if exits and i < len(exits[0]) and player_rect.colliderect(exits[1][i]):
                 if exits[0][i] == 'R':
@@ -167,9 +170,9 @@ def show_game_screen(screen):
 
                 player_rect = pygame.Rect(player_x, player_y, collision_size, collision_size)
 
-                
+        # Display text and sprites
         if config.current_level == 0:
-            winner_text = pygame.font.Font("resources/PixelOperator8.ttf", 16).render("Embark on a dangerous joruney...", True, (255, 15, 15))
+            winner_text = pygame.font.Font("resources/PixelOperator8.ttf", 16).render("Embark on a dangerous journey...", True, (255, 15, 15))
             delete_text = pygame.font.Font("resources/PixelOperator8.ttf", 11).render("Proceed through five dungeons to win the game!", True, (255, 255, 255))
             screen.blit(winner_text, ((width / 2) - (winner_text.get_width() / 2), height / 2 - 50))
             screen.blit(delete_text, ((width / 2) - (delete_text.get_width() / 2), (height / 2) - (delete_text.get_height()) - 10))
@@ -186,12 +189,7 @@ def show_game_screen(screen):
                 win_music.play()
                 win_music_played = True
 
-            
-        #
-        # MAIN GAME LOGIC END
-        #
-
-        
+        # Display player and level text
         screen.blit(tiles[config.CHARACTER_TILE], (player_x, player_y))
         screen.blit(player_name, (player_x, player_y - 15))
 
@@ -201,10 +199,7 @@ def show_game_screen(screen):
 
         pygame.display.flip()
 
-    #
-    # SAVE GAME
-    #
-
+    # Save game data
     print(Fore.WHITE + "Saving game..." + Style.RESET_ALL)
     connection = config.sql_connection
 
@@ -232,5 +227,6 @@ def show_game_screen(screen):
                 connection.commit()
                 config.sql_connection.close()
 
+    # Quit game
     print(Fore.BLUE + "Goodbye!" + Style.RESET_ALL)
     pygame.quit()
