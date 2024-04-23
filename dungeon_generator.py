@@ -1,9 +1,13 @@
 import random
+
 import config
 
+
 def generate_dungeon(seed, width=21, height=15, complexity=0.75):
+
     # Setup
     random.seed(seed)
+    config.seed = seed
     dungeon = [['W' for _ in range(width)] for _ in range(height)]
     
     for x in range(width):
