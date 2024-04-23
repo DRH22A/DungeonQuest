@@ -1,4 +1,5 @@
 # main.py
+import mysql.connector
 import pygame
 from pygame.locals import *
 import multiprocessing
@@ -158,17 +159,36 @@ def show_game_screen(screen):
 
         pygame.display.flip()
 
-    if config.current_level > 5:
-        config.primary_seed = 0
-        config.current_level = 0
-        config.player_x = round((width // 2) / player_size) * player_size
-        config.player_y = round((height // 2) / player_size) * player_size
+    #
+    # SAVE GAME
+    #
+
+    print(Fore.WHITE + "Saving game..." + Style.RESET_ALL)
+    connection = config.sql_connection
+
+    if connection is None:
+        print(Fore.RED + "Error: Failed to establish connection to database" + Style.RESET_ALL)
     else:
-        config.player_x = player_x
-        config.player_y = player_y
+        try:
+            cursor = connection.cursor(dictionary=True)
 
+            if config.current_level > 5 or config.current_level == 0:
+                cursor.execute("""UPDATE users SET level = %s, x = %s, y = %s, seed = %s WHERE username = %s""",
+                               (None, None, None, None, config.local_username))
+            else:
+                cursor.execute("""UPDATE users SET level = %s, x = %s, y = %s, seed = %s WHERE username = %s""",
+                               (config.current_level, player_x, player_y, config.primary_seed, config.local_username))
 
-    config.sql_connection.close()
+            connection.commit()
+            print(Fore.GREEN + "Game Saved!" + Style.RESET_ALL)
+
+        except mysql.connector.Error as error:
+            print(Fore.RED + f"Error: {error}" + Style.RESET_ALL)
+
+        finally:
+            if connection.is_connected():
+                connection.commit()
+                config.sql_connection.close()
 
     print(Fore.BLUE + "Goodbye!" + Style.RESET_ALL)
     pygame.quit()
