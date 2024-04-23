@@ -10,6 +10,7 @@ local_password = None
 
 # TODO: network this to sql db
 current_level = 0
+seed = 0
 
 # Global constants
 SCREEN_MAIN_MENU = 0
