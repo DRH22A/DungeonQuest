@@ -29,3 +29,6 @@ Early development, wrote the reports, server building, player menu, account boun
 
 ### Nico Milette
 Parellel computation, dungeon generation, maze generation
+
+### Evan Rudd
+Database setup, role based access, backend networking
