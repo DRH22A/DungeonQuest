@@ -12,6 +12,7 @@ player_x = 0
 player_y = 0
 current_level = 0
 seed = 0
+admin = False
 
 # Global constants
 SCREEN_MAIN_MENU = 0

@@ -76,6 +76,7 @@ def show_login_screen(screen):
                             print(Fore.GREEN + "Sign Up Successful")
                             if is_admin:
                                 print(Fore.BLUE + "You have been signed up as an admin!")
+                                config.admin = True
                             print(Fore.GREEN + "You may now sign in to the game!" + Style.RESET_ALL)
                         except mysql.connector.errors.IntegrityError as e:
                             text = "Username already taken!"

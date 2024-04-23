@@ -16,7 +16,7 @@ if __name__ == "__main__":
     pygame.init()
     pygame.mixer.init()
 
-    main_menu_music = pygame.mixer.Sound("resources/main_menu_music.ogg")
+    main_menu_music = pygame.mixer.Sound("resources/main_menu_music.wav")
     
     main_menu_music.play()
     

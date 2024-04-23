@@ -32,10 +32,10 @@ def show_game_screen(screen):
     pygame.display.set_caption("Dungeon Quest")
     pygame.key.set_repeat(1, 1)
 
-    win_music = pygame.mixer.Sound("resources/win_music.mp3")
+    win_music = pygame.mixer.Sound("resources/win_music.wav")
     win_music_played = False
 
-    transition_sound = pygame.mixer.Sound("resources/transition_sound.mp3")
+    transition_sound = pygame.mixer.Sound("resources/transition_sound.wav")
 
     player_size = config.VISUAL_TILE_SIZE
     collision_size = player_size
@@ -102,7 +102,7 @@ def show_game_screen(screen):
 
                 if keys[pygame.K_ESCAPE]:
                     config.running = False
-                if keys[pygame.K_m]:
+                if keys[pygame.K_m] and config.admin:
                     print(Fore.YELLOW + "Dumping SQL users table!" + Style.RESET_ALL)
 
                     cursor = config.sql_connection.cursor()
