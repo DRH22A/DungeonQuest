@@ -25,4 +25,4 @@ See `requirements.txt`
 Graphics & UI, dungeon building, game logic, project structure
 
 ### Daniel Halterman
-Early development, wrote the reports (including deployment report), server building, player menu, code comments
+Early development, wrote the reports, server building, player menu, account bound resources

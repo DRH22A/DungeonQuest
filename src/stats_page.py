@@ -26,9 +26,9 @@ def main_menu_button(screen):
 
 def show_stats_screen(screen):
     # Dummy data for player stats
-    total_score = 0
-    total_deaths = 0
-    total_runs = 0
+    total_score = 1000
+    total_deaths = 5
+    total_runs = 20
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
