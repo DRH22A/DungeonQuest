@@ -25,15 +25,20 @@ if __name__ == "__main__":
     print(Fore.BLACK + Back.GREEN + "Welcome to DUNGEON QUEST!" + Style.RESET_ALL)
 
     while True:
+        # Loads Main Menu
         if config.current_menu == config.SCREEN_MAIN_MENU:
             config.current_menu = title.show_title_screen(screen)
+        # Loads Login Screen
         elif config.current_menu == config.SCREEN_LOGIN_MENU:
             config.current_menu = login.show_login_screen(screen)
+        # Loads Player Menu
         elif config.current_menu == config.SCREEN_PLAYER_MENU:
             config.current_menu = player_menu.show_player_menu(screen)
+        #Loads Game
         elif config.current_menu == config.SCREEN_GAME:
             main_menu_music.stop()
             foundation.show_game_screen(screen)
+        # Loads Stats Page
         elif config.current_menu == config.STATS:
             config.current_menu = stats_page.show_stats_screen(screen)  
 
