@@ -92,7 +92,7 @@ def show_login_screen(screen):
                             print(Fore.GREEN + "Sign In Successful" + Style.RESET_ALL)
                             config.local_username = username
                             config.local_password = user.get('password')
-
+                            
                             # Reconnect as Role
                             cursor.execute("""SELECT role FROM users WHERE username = %s""", (username,))
                             role = cursor.fetchone()
@@ -110,6 +110,8 @@ def show_login_screen(screen):
                                     password="adminpass",
                                     database="dungeonquest"
                                 )
+
+                                config.admin = True
 
                             # Load Player Save
                             cursor.execute("""SELECT level, x, y, seed FROM users WHERE username = %s""", (username,))
