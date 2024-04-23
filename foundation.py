@@ -1,25 +1,24 @@
 # main.py
-import multiprocessing
-import time
-
 import mysql.connector
 import pygame
-from colorama import Fore, Style
+from pygame.locals import *
+import multiprocessing
+from colorama import Fore, Back, Style
 
 import config
 from dungeon_builder import build_dungeon
 from dungeon_generator import generate_dungeon
-
+import time
 
 def generate_dungeon_wrapper(level_seed):
     level, seed = level_seed
     print(f"Process starting for seed: {seed}, level: {level}")
     start_time = time.perf_counter()
-
+    
     if level <= 10:
-        complexity = 0.1 + (0.9 * ((level - 1) / 9) ** 2)
+        complexity = 0.1 + (0.9 * ((level - 1) / 9) ** 2)  
     else:
-        complexity = 1.0
+        complexity = 1.0  
     result = generate_dungeon(seed=seed, complexity=complexity)
     end_time = time.perf_counter()
     duration = end_time - start_time
@@ -40,7 +39,7 @@ def show_game_screen(screen):
 
     player_speed = player_size
     key_pressed = False
-    player_rect = pygame.Rect(player_x, player_y, collision_size, collision_size)
+    player_rect = pygame.Rect(player_x, player_y, collision_size, collision_size) 
 
     # Load tileset
     level_font = pygame.font.Font("resources/PixelOperator8.ttf", 24)
@@ -55,18 +54,21 @@ def show_game_screen(screen):
 
     config.TILE_SET = tiles
 
-    player_name = pygame.font.Font("resources/PixelOperator8.ttf", 16).render(config.local_username, True,
-                                                                              (255, 255, 255))
+    player_name = pygame.font.Font("resources/PixelOperator8.ttf", 16).render(config.local_username, True, (255, 255, 255))
 
     with multiprocessing.Pool() as pool:
-        seeds = [(n, int(time.time()) + n) for n in range(1, 11)]
+        if config.seed == 0:
+            config.seed = int(time.time())
+
+        seeds = [(n, config.seed + n) for n in range(1, 11)]
         levels_data = pool.map(generate_dungeon_wrapper, seeds)
         for n, data in enumerate(levels_data, 1):
             config.levels[f'LEVEL_{n}'] = data
 
+
     # Game loop
     colliders, exits = [], []
-
+    
     while config.running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -87,7 +89,7 @@ def show_game_screen(screen):
                     player_rect.move_ip(0, -player_speed)
                 if keys[pygame.K_DOWN] and player_rect.y < height - player_size:
                     player_rect.move_ip(0, player_speed)
-
+ 
                 if any(player_rect.colliderect(c) for c in colliders):
                     player_rect.topleft = old_position
 
@@ -107,6 +109,7 @@ def show_game_screen(screen):
                 screen, colliders, exits = build_dungeon(screen, config.levels[level_key])
             else:
                 screen, colliders, exits = build_dungeon(screen, generate_dungeon(config.SPAWN_MAP))
+
 
         #
         # MAIN GAME LOGIC START
@@ -131,27 +134,28 @@ def show_game_screen(screen):
 
                 player_rect = pygame.Rect(player_x, player_y, collision_size, collision_size)
 
+                
+
         if config.current_level > 5:
             screen, colliders, exits = build_dungeon(screen, config.VICTORY_MAP)
 
-            winner_text = pygame.font.Font("resources/PixelOperator8.ttf", 16).render("YOU ARE A WINNER!", True,
-                                                                                      (255, 215, 0))
-            delete_text = pygame.font.Font("resources/PixelOperator8.ttf", 11).render("Exit the game to play again!",
-                                                                                      True, (255, 255, 255))
+            winner_text = pygame.font.Font("resources/PixelOperator8.ttf", 16).render("YOU ARE A WINNER!", True, (255, 215, 0))
+            delete_text = pygame.font.Font("resources/PixelOperator8.ttf", 11).render("Exit the game to play again!", True, (255, 255, 255))
             screen.blit(winner_text, ((width / 2) - (winner_text.get_width() / 2), height / 2 - 50))
-            screen.blit(delete_text,
-                        ((width / 2) - (delete_text.get_width() / 2), (height / 2) - (delete_text.get_height()) - 10))
+            screen.blit(delete_text, ((width / 2) - (delete_text.get_width() / 2), (height / 2) - (delete_text.get_height()) - 10))
 
+            
         #
         # MAIN GAME LOGIC END
         #
 
+        
         screen.blit(tiles[config.CHARACTER_TILE], (player_x, player_y))
         screen.blit(player_name, (player_x, player_y - 15))
 
         if 1 <= config.current_level <= 5:
             level_text = level_font.render(f"Level: {config.current_level}", True, (0, 0, 0))
-            screen.blit(level_text, (10, 10))
+            screen.blit(level_text, (10, 10))  
 
         pygame.display.flip()
 
@@ -173,7 +177,7 @@ def show_game_screen(screen):
                                (None, None, None, None, config.local_username))
             else:
                 cursor.execute("""UPDATE users SET level = %s, x = %s, y = %s, seed = %s WHERE username = %s""",
-                               (config.current_level, player_x, player_y, config.seed, config.local_username))
+                               (config.current_level, player_x, player_y, config.primary_seed, config.local_username))
 
             connection.commit()
             print(Fore.GREEN + "Game Saved!" + Style.RESET_ALL)
@@ -183,6 +187,7 @@ def show_game_screen(screen):
 
         finally:
             if connection.is_connected():
+                connection.commit()
                 config.sql_connection.close()
 
     print(Fore.BLUE + "Goodbye!" + Style.RESET_ALL)
