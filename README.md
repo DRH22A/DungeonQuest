@@ -6,6 +6,7 @@ We had some of our project done and then after spring break,
 decided to take things in a different direction. We plan to use this project as a learning experience in the future.
 
 ## Usage
+From the repository root directory:
 ```
 pip install -r requirements.txt
 python3 ./src/main.py
