@@ -22,6 +22,7 @@ def show_player_menu(screen):
 
     # Adjust the button positions accordingly
     start_button = pygame.Rect(width // 2 - button_width // 2 + 25, height // 2 - 100, button_width, button_height)
+    seed_button = pygame.Rect(width // 2 - button_width // 2 + 25, height // 2 - 30, button_width, button_height)
     exit_button = pygame.Rect(width // 2 - button_width // 2 + 25, height // 2 + 40, button_width, button_height)
 
     if config.admin:
@@ -37,7 +38,7 @@ def show_player_menu(screen):
                 mouse_pos = event.pos
                 if start_button.collidepoint(mouse_pos):
                     return config.SCREEN_GAME
-                elif seeds_button.collidepoint(mouse_pos):
+                elif seed_button.collidepoint(mouse_pos):
                     return config.SEEDS
                 elif config.admin and admin_button.collidepoint(mouse_pos):
                     return config.SCREEN_ADMIN_MENU
@@ -48,14 +49,16 @@ def show_player_menu(screen):
         # Draw the menu buttons
         screen.fill((0, 0, 0))
         pygame.draw.rect(screen, (0, 0, 0), start_button)
+        pygame.draw.rect(screen, (0, 0, 0), seed_button)
         pygame.draw.rect(screen, (0, 0, 0), exit_button)
 
         # Button labels
         draw_text(screen, "Start", (255, 255, 255), (width // 2, height // 2 - 90))
+        draw_text(screen, "Seed", (255, 255, 255), (width // 2, height // 2 - 20))
         draw_text(screen, "Exit", (255, 255, 255), (width // 2 + 10, height // 2 + 50))
 
         if config.admin:
             pygame.draw.rect(screen, (0, 0, 0), admin_button)
-            draw_text(screen, "Admin Menu", (255, 255, 255), (width // 2 - 40, height // 2 - 150))
+            draw_text(screen, "Winner Menu", (255, 255, 255), (width // 2 - 40, height // 2 - 150))
 
         pygame.display.flip()

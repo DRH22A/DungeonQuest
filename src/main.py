@@ -8,7 +8,7 @@ import login
 import foundation
 import player_menu
 import config
-import stats_page
+import seeds_page
 import admin_menu
 
 from colorama import Fore, Back, Style
@@ -40,8 +40,8 @@ if __name__ == "__main__":
             main_menu_music.stop()
             foundation.show_game_screen(screen)
         # Loads Stats Page
-        elif config.current_menu == config.STATS:
-            config.current_menu = stats_page.show_stats_screen(screen)  
+        elif config.current_menu == config.SEEDS:
+            config.current_menu = seeds_page.show_seeds_screen(screen)  
         elif config.current_menu == config.SCREEN_ADMIN_MENU:
             config.current_menu = admin_menu.show_admin_menu(screen)
 
