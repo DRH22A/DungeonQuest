@@ -9,6 +9,7 @@ import foundation
 import player_menu
 import config
 import stats_page
+import admin_menu
 
 from colorama import Fore, Back, Style
 
@@ -41,4 +42,6 @@ if __name__ == "__main__":
         # Loads Stats Page
         elif config.current_menu == config.STATS:
             config.current_menu = stats_page.show_stats_screen(screen)  
+        elif config.current_menu == config.SCREEN_ADMIN_MENU:
+            config.current_menu = admin_menu.show_admin_menu(screen)
 
