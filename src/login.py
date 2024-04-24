@@ -97,14 +97,23 @@ def show_login_screen(screen):
                             cursor.execute("""SELECT role FROM users WHERE username = %s""", (username,))
                             role = cursor.fetchone()
                             if role.get('role') == 'Player':
-                                connection = mysql.connector.connect(
+                                new_connection = mysql.connector.connect(
                                     host="cop4521-dungeonquest.c3gw2k8i8nc0.us-east-1.rds.amazonaws.com",
                                     user="player_user",
                                     password="password",
                                     database="dungeonquest"
                                 )
+                            elif role.get('role') == 'Winner':
+                                new_connection = mysql.connector.connect(
+                                    host="cop4521-dungeonquest.c3gw2k8i8nc0.us-east-1.rds.amazonaws.com",
+                                    user="winner_user",
+                                    password="winnerpass",
+                                    database="dungeonquest"
+                                )
+
+                                config.victory = True
                             else:
-                                connection = mysql.connector.connect(
+                                new_connection = mysql.connector.connect(
                                     host="cop4521-dungeonquest.c3gw2k8i8nc0.us-east-1.rds.amazonaws.com",
                                     user="admin_user",
                                     password="adminpass",
@@ -112,9 +121,10 @@ def show_login_screen(screen):
                                 )
 
                                 config.admin = True
+                                config.victory = True
 
-                            config.sql_connection = connection
-                            cursor = connection.cursor(dictionary=True)
+                            config.sql_connection = new_connection
+                            cursor = config.sql_connection.cursor(dictionary=True)
 
                             # Load Player Save
                             cursor.execute("""SELECT level, x, y, seed FROM users WHERE username = %s""", (username,))
@@ -134,6 +144,7 @@ def show_login_screen(screen):
                             print(Fore.RED + "Invalid username or password" + Style.RESET_ALL)
 
                     connection.commit()
+                    connection.close()
 
             for box in input_boxes:
                 box.handle_event(event)
