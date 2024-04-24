@@ -34,7 +34,7 @@ See `requirements.txt`
 Graphics & UI, dungeon building, game logic, project structure
 
 ### Daniel Halterman
-Early development, wrote the reports, server building, player menu, comments
+Early development, wrote the reports and distribution plan, server building, player menu
 
 ### Nico Milette
 Parellel computation, dungeon generation, maze generation

@@ -39,6 +39,6 @@ To deploy our Pygame application on AWS, we leverage AWS's container orchestrati
 ECS allows us to easily run, stop, and manage Docker containers on a cluster of virtual servers called Amazon EC2 instances.
 
 Step 7: Monitoring and Scaling the Deployed Application:
-Once the Pygame application is deployed on the cloud, we continuously monitor its performance and reliability using built-in monitoring toolsor third-party services.
+Once the Pygame application is deployed on the cloud, we continuously monitor its performance and reliability using built-in monitoring tools or third-party services.
 We set up alerts to notify us of any issues or anomalies and scale the application dynamically to handle fluctuations in traffic and workload.
 This ensures that our application remains available, responsive, and cost-effective.
