@@ -27,7 +27,7 @@ def main_menu_button(screen):
 
 def show_stats_screen(screen):
     # Dummy data for player stats
-    total_runs_started = player_clicks1
+    total_runs_started = 0
     total_runs_completed = 0
     while True:
         for event in pygame.event.get():
