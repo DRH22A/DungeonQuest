@@ -1,4 +1,5 @@
 import pygame
+import player_menu
 
 import config
 
@@ -26,9 +27,8 @@ def main_menu_button(screen):
 
 def show_stats_screen(screen):
     # Dummy data for player stats
-    total_score = 1000
-    total_deaths = 5
-    total_runs = 20
+    total_runs_started = player_clicks1
+    total_runs_completed = 0
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -43,9 +43,8 @@ def show_stats_screen(screen):
 
         # Display player stats
         draw_text(screen, "Player Stats", (255, 255, 255), (WIDTH // 2, HEIGHT // 2 - 200))
-        draw_text(screen, "Total Score: {}".format(total_score), (255, 255, 255), (WIDTH // 2, HEIGHT // 2 - 150))
-        draw_text(screen, "Total Deaths: {}".format(total_deaths), (255, 255, 255), (WIDTH // 2, HEIGHT // 2 - 100))
-        draw_text(screen, "Total Runs: {}".format(total_runs), (255, 255, 255), (WIDTH // 2, HEIGHT // 2 - 50))
+        draw_text(screen, "Total Runs Started: {}".format(total_runs_started), (255, 255, 255), (WIDTH // 2, HEIGHT // 2 - 150))
+        draw_text(screen, "Total Runs Completed: {}".format(total_runs_completed), (255, 255, 255), (WIDTH // 2, HEIGHT // 2 - 50))
 
         # Draw the main menu button
         main_menu_rect = main_menu_button(screen)
