@@ -16,7 +16,7 @@ Use arrow keys to move around.
 Press ESC from the main game to quit the game.
 
 ### Admin-specific Usage
-As an admin, you can change you can change your ID to any user that exists within the SQL database. This is done from the game menu before the main game.
+As an admin, you can change you can change your ID to any user that exists within the SQL database. This is done from the game menu before the main game. The users table is dumped to stdout for ease of use.
 
 In the main game, press M to dump the users table into the terminal.
 
