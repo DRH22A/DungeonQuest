@@ -188,6 +188,8 @@ def show_game_screen(screen):
             if not win_music_played:
                 win_music.play()
                 win_music_played = True
+                
+            config.sql_connection.cursor().execute("UPDATE users SET role = 'Winner' WHERE username = %s", (config.local_username,))
 
         # Display player and level text
         screen.blit(tiles[config.CHARACTER_TILE], (player_x, player_y))
