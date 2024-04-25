@@ -72,7 +72,8 @@ def show_seeds_screen(screen):
                     print("Set seed to", config.seed)
                     return config.SCREEN_PLAYER_MENU  
 
-            input_box_seed.handle_event(event)
+            if config.admin:
+                input_box_seed.handle_event(event)
 
         screen.fill((0, 0, 0))
 
