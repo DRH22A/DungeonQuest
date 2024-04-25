@@ -36,11 +36,11 @@ def show_seeds_screen(screen):
 
     cursor = config.sql_connection.cursor(dictionary=False)
     cursor.execute('SELECT seed FROM dungeonquest.seeds')
-    seeds = cursor.fetchone()
+    seeds = cursor.fetchall()
 
     seed_rects = []
     for seed in seeds:
-        seed_rect = pygame.Rect(WIDTH // 2 - 50, HEIGHT // 3 + (10 * seeds.index(seed)), 200, 50)
+        seed_rect = pygame.Rect(WIDTH // 2 - 50, HEIGHT // 3 + (50 * seeds.index(seed)), 200, 50)
         seed_rects.append(seed_rect)
 
     while True:
@@ -53,10 +53,9 @@ def show_seeds_screen(screen):
 
                     try:
                         if seed != "":
-                            cursor = config.sql_connection.cursor(dictionary=True)
+                            cursor = config.sql_connection.cursor(dictionary=True, buffered=True)
                             cursor.execute("INSERT INTO seeds (seed) VALUES (%s)", (seed,))
                             config.sql_connection.commit()
-                            print('test')
 
                     except Exception as e:
                         print(e)
@@ -64,10 +63,11 @@ def show_seeds_screen(screen):
 
                     return config.SCREEN_PLAYER_MENU
 
-                if [seed_rect for _ in seed_rects if seed_rect.collidepoint(event.pos)]:
-                    config.seed = int(seeds[seed_rects.index(seed_rect)])
-                    print("Set seed to", config.seed)
-                    return config.SCREEN_PLAYER_MENU
+                for seed_rect in seed_rects:
+                    if seed_rect.collidepoint(event.pos):
+                        config.seed = int(seeds[seed_rects.index(seed_rect)][0])
+                        print("Set seed to", config.seed)
+                        return config.SCREEN_PLAYER_MENU
 
             if config.admin:
                 input_box_seed.handle_event(event)
@@ -82,7 +82,7 @@ def show_seeds_screen(screen):
 
         for seed_rect in seed_rects:
             pygame.draw.rect(screen, BLACK, seed_rect)
-            draw_text(screen, seeds[seed_rects.index(seed_rect)], WHITE,
-                      (WIDTH // 2 - 50, HEIGHT // 3 + (10 * seed_rects.index(seed_rect))))
+            draw_text(screen, seeds[seed_rects.index(seed_rect)][0], WHITE,
+                      (WIDTH // 2 - 50, HEIGHT // 3 + (50 * seed_rects.index(seed_rect))))
 
         pygame.display.flip()
