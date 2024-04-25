@@ -35,6 +35,8 @@ if __name__ == "__main__":
         # Loads Player Menu
         elif config.current_menu == config.SCREEN_PLAYER_MENU:
             config.current_menu = player_menu.show_player_menu(screen)
+        elif config.current_menu == config.SCREEN_WINNER_MENU:
+            config.current_menu = player_menu.show_player_menu(screen)
         #Loads Game
         elif config.current_menu == config.SCREEN_GAME:
             main_menu_music.stop()
@@ -44,4 +46,3 @@ if __name__ == "__main__":
             config.current_menu = seeds_page.show_seeds_screen(screen)  
         elif config.current_menu == config.SCREEN_ADMIN_MENU:
             config.current_menu = admin_menu.show_admin_menu(screen)
-
