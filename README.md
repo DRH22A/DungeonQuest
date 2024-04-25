@@ -22,7 +22,7 @@ In the main game, press M to dump the users table into the terminal.
 
 ## Features
 ### Information Management (RBAC)
-Role based access control is one feature of the game's database. It allows for a distiction between three types of users: Player, Winner, and Admin. Players are only allowed read and update access to the users tabel. Winners are allowed the same as Players, but also have the ability to read and update the seeds table, allowing other Winners to see the previous seeds. Admins have full CRUD access on all tables in the database.
+Role based access control is one feature of the game's database. It allows for a distiction between three types of users: Player, Winner, and Admin. Players are only allowed read and update access to the users table. Winners are allowed the same as Players, but also have the ability to read and update the seeds table, allowing other Winners to see the previous seeds. Admins have full CRUD access on all tables in the database.
 ```python
 # Only permitted when logged in as a "Winner" user
 cursor = config.sql_connection.cursor(dictionary=False)
