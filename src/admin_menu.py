@@ -28,6 +28,7 @@ def main_menu_button(screen):
     return button_rect
 
 def show_admin_menu(screen):
+    main_menu_rect = main_menu_button(screen)
     user_id = None
 
     input_box_user_id = InputBox(WIDTH // 2 - 100, HEIGHT // 2 - 160, 200, 32)
@@ -87,6 +88,5 @@ def show_admin_menu(screen):
         input_box_user_id.update()
         input_box_user_id.draw(screen)
 
-        main_menu_rect = main_menu_button(screen)
 
         pygame.display.flip()

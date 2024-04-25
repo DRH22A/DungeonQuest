@@ -25,6 +25,7 @@ def main_menu_button(screen):
 
 def show_seeds_screen(screen):
     seed = ""
+    main_menu_rect = main_menu_button(screen)
 
     if config.admin:
         input_box_seed = InputBox(WIDTH // 2 - 100, HEIGHT // 4, 200, 32)
@@ -42,24 +43,24 @@ def show_seeds_screen(screen):
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if main_menu_rect.collidepoint(event.pos):  
-                    user_id = input_box_seed.text
-                    print(f"New User ID: {user_id}")
+                    seed = input_box_seed.text
+                    print(f"Set new seed: {seed}")
                     input_box_seed.text = ""
 
                     try:
-                        if user_id != "":
+                        if seed != "":
                             cursor = config.sql_connection.cursor(dictionary=True)
-                            cursor.execute("""SELECT username, level, x, y, seed FROM users WHERE id = %s""", (user_id,))
-                            user = cursor.fetchone()
-                            if user.get('username') and user.get('level') and user.get('x') and user.get('y') and user.get('seed'):
-                                config.local_username = user.get('username')
-                                config.current_level = int(user.get('level'))
-                                config.player_x = int(user.get('x'))
-                                config.player_y = int(user.get('y'))
-                                config.seed = int(user.get('seed'))
+                            #cursor.execute("""SELECT username, level, x, y, seed FROM users WHERE id = %s""", (user_id,))
+                            #user = cursor.fetchone()
+                            #if user.get('username') and user.get('level') and user.get('x') and user.get('y') and user.get('seed'):
+                            #    config.local_username = user.get('username')
+                            #    config.current_level = int(user.get('level'))
+                            #    config.player_x = int(user.get('x'))
+                            #    config.player_y = int(user.get('y'))
+                            #    config.seed = int(user.get('seed'))
                         
                     except:
-                        print("Invalid user ID")
+                        print("Invalid seed!")
 
                 if [seed_rect for seed_rect in seed_rects if seed_rect.collidepoint(event.pos)]:
                     config.seed = seeds[seed_rects.index(seed_rect)]
