@@ -11,12 +11,32 @@ From the repository root directory:
 pip install -r requirements.txt
 python3 ./src/main.py
 ```
+Users can be created on the fly.
+
+Depending on user's state, you are logged in to the MySQL database as one of three users: `player_user`, `winner_user`, or `admin_user`.
+To log in as a premade "winner", use the following username/password:
+```
+test2
+test2
+```
+
+### Controls
 Use arrow keys to move around.
 
 Press ESC from the main game to quit the game.
 
+
+### Winner-specific Usage
+Winners users are created after making it through the 5 main levels of the game. 
+
+As winner, you can choose from seeds in the main menu before loading into the game.
+
 ### Admin-specific Usage
+An admin can be created arbitrarily from the Login page.
+
 As an admin, you can change you can change your ID to any user that exists within the SQL database. This is done from the game menu before the main game. The users table is dumped to stdout for ease of use.
+
+In the Seeds menu, admins can arbitrarily add seeds using the input box at the top.
 
 In the main game, press M to dump the users table into the terminal.
 
@@ -24,7 +44,10 @@ In the main game, press M to dump the users table into the terminal.
 ### Information Management (RBAC)
 Role based access control is one feature of the game's database. It allows for a distiction between three types of users: Player, Winner, and Admin. Players are only allowed read and update access to the users tabel. Winners are allowed the same as Players, but also have the ability to read and update the seeds table, allowing other Winners to see the previous seeds. Admins have full CRUD access on all tables in the database.
 ```python
-config.sql_connection.cursor().execute("UPDATE users SET role = 'Winner' WHERE username = %s", (config.local_username,))
+# Only permitted when logged in as a "Winner" user
+cursor = config.sql_connection.cursor(dictionary=False)
+cursor.execute('SELECT seed FROM dungeonquest.seeds')
+seeds = cursor.fetchone()
 ```
 ### Secure Computing
 Secure computing is achieved in this application through the user registration and login system. We securely store and compare hashed and salted passwords to prevent the security risk.
