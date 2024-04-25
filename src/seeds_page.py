@@ -47,19 +47,20 @@ def show_seeds_screen(screen):
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if main_menu_rect.collidepoint(event.pos):
-                    seed = input_box_seed.text
-                    print(f"Set new seed: {seed}")
-                    input_box_seed.text = ""
+                    if config.admin:
+                        seed = input_box_seed.text
+                        print(f"Set new seed: {seed}")
+                        input_box_seed.text = ""
 
-                    try:
-                        if seed != "":
-                            cursor = config.sql_connection.cursor(dictionary=True, buffered=True)
-                            cursor.execute("INSERT INTO seeds (seed) VALUES (%s)", (seed,))
-                            config.sql_connection.commit()
+                        try:
+                            if seed != "":
+                                cursor = config.sql_connection.cursor(dictionary=True, buffered=True)
+                                cursor.execute("INSERT INTO seeds (seed) VALUES (%s)", (seed,))
+                                config.sql_connection.commit()
 
-                    except Exception as e:
-                        print(e)
-                        print("Invalid seed!")
+                        except Exception as e:
+                            print(e)
+                            print("Invalid seed!")
 
                     return config.SCREEN_PLAYER_MENU
 
