@@ -17,11 +17,12 @@ def show_player_menu(screen):
     width, height = config.WIDTH, config.HEIGHT
 
     # Define button width and height
-    button_width = 200  # Double the original width
+    button_width = 200
     button_height = 40
 
     # Adjust the button positions accordingly
     start_button = pygame.Rect(width // 2 - button_width // 2 + 25, height // 2 - 100, button_width, button_height)
+    seeds_button = pygame.Rect(width // 2 - button_width // 2 + 25, height // 2 - 40, button_width, button_height)
     exit_button = pygame.Rect(width // 2 - button_width // 2 + 25, height // 2 + 40, button_width, button_height)
 
     if config.admin:
@@ -48,11 +49,12 @@ def show_player_menu(screen):
         # Draw the menu buttons
         screen.fill((0, 0, 0))
         pygame.draw.rect(screen, (0, 0, 0), start_button)
+        pygame.draw.rect(screen, (0, 0, 0), seeds_button)
         pygame.draw.rect(screen, (0, 0, 0), exit_button)
 
         # Button labels
         draw_text(screen, "Start", (255, 255, 255), (width // 2, height // 2 - 90))
-        draw_text(screen, "Seeds", (255, 255, 255), (width // 2, height // 2 - 90))
+        draw_text(screen, "Seeds", (255, 255, 255), (width // 2, height // 2 - 30))
         draw_text(screen, "Exit", (255, 255, 255), (width // 2 + 10, height // 2 + 50))
 
         if config.admin:
