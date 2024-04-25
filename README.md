@@ -25,11 +25,23 @@ Use arrow keys to move around.
 
 Press ESC from the main game to quit the game.
 
+### General User-specific Usage
+General users can play through randomly generated levels and have their progress saved when logging out.
+They can resume their progress when logging back in.
+
+General Users can become Winners by beating their first randomly generated game.
+
+#### RBAC:
+(Read/Update access to the users table)
 
 ### Winner-specific Usage
 Winners users are created after making it through the 5 main levels of the game. 
 
 As winner, you can choose from seeds in the main menu before loading into the game.
+
+#### RBAC:
+(Read/Update access to the users table)
+(Read access to the seeds table)
 
 ### Admin-specific Usage
 An admin can be created arbitrarily from the Login page.
@@ -39,6 +51,9 @@ As an admin, you can change you can change your ID to any user that exists withi
 In the Seeds menu, admins can arbitrarily add seeds using the input box at the top.
 
 In the main game, press M to dump the users table into the terminal.
+
+#### RBAC:
+(Full Database Access)
 
 ## Features
 ### Information Management (RBAC)
