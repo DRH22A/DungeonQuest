@@ -21,9 +21,28 @@ As an admin, you can change you can change your ID to any user that exists withi
 In the main game, press M to dump the users table into the terminal.
 
 ## Features
-- Parallel dungeon generation
-- Cloud-based saves via MySQL and AWS
-- Admin-based access and data manipulation
+### Information Management (RBAC)
+Role based access control is one feature of the game's database. It allows for a distiction between three types of users: Player, Winner, and Admin. Players are only allowed read and update access to the users tabel. Winners are allowed the same as Players, but also have the ability to read and update the seeds table, allowing other Winners to see the previous seeds. Admins have full CRUD access on all tables in the database.
+```python
+config.sql_connection.cursor().execute("UPDATE users SET role = 'Winner' WHERE username = %s", (config.local_username,))
+```
+### Secure Computing
+Secure computing is achieved in this application through the user registration and login system. We securely store and compare hashed and salted passwords to prevent the security risk.
+```python
+hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+```
+### Parallel Computing
+In this game, parallel computing plays a role in the generation of the mazes. Specifically, a pool of processes is created to generate 5 mazes when a player starts a new game.
+```python
+ with multiprocessing.Pool() as pool:
+        if config.seed == 0:
+            config.seed = int(time.time())
+
+        seeds = [(n, config.seed + n) for n in range(1, 6)]
+        levels_data = pool.map(generate_dungeon_wrapper, seeds)
+        for n, data in enumerate(levels_data, 1):
+            config.levels[f'LEVEL_{n}'] = data
+```
 
 ## Libraries
 See `requirements.txt`
