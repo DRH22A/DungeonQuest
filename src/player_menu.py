@@ -52,6 +52,7 @@ def show_player_menu(screen):
 
         # Button labels
         draw_text(screen, "Start", (255, 255, 255), (width // 2, height // 2 - 90))
+        draw_text(screen, "Seeds", (255, 255, 255), (width // 2, height // 2 - 90))
         draw_text(screen, "Exit", (255, 255, 255), (width // 2 + 10, height // 2 + 50))
 
         if config.admin:
